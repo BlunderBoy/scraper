@@ -1,0 +1,39 @@
+# Wrangler config for your Cloudflare account (D1 + R2 bindings).
+#
+# Fill in account_id and the blocks below using the Cloudflare dashboard:
+# - D1: Workers & Pages → D1 → your database → copy UUID
+# - R2: R2 → your bucket → name matches bucket_name below
+#
+# Upload script alignment (same values must appear in `.env` for upload_cloudflare.py):
+#   CLOUDFLARE_ACCOUNT_ID           → account_id below
+#   CLOUDFLARE_D1_DATABASE_ID       → database_id under [[d1_databases]]
+#   R2_BUCKET_NAME                  → bucket_name under [[r2_buckets]]
+#
+# Secrets that wrangler.toml does NOT support in plain text (use `.env`, not this file):
+#   CLOUDFLARE_API_TOKEN            # wrangler login / dashboard API token with D1 + Account read
+#   R2_ACCESS_KEY_ID                # R2 → Manage R2 API Tokens → Create API token (S3-compatible)
+#   R2_SECRET_ACCESS_KEY
+#
+# Commands (after editing this file):
+#   wrangler d1 execute DB --remote --file=d1_schema_merged.sql
+#   wrangler d1 execute DB --remote --command "SELECT 1"
+#
+# Optional: add a Workers project later by setting `main` and uncommenting worker fields.
+
+name = "scraper-upload"
+compatibility_date = "2025-04-01"
+# workers_dev = false
+
+# Replace with your Cloudflare account ID (dashboard URL or Overview page).
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+
+# D1 — binding name "DB" is how Workers code would access it; upload_cloudflare.py uses REST + database_id only.
+[[d1_databases]]
+binding = "DB"
+database_name = "YOUR_D1_DATABASE_NAME"
+database_id = "YOUR_D1_DATABASE_UUID"
+
+# R2 — binding name "IMAGES"; upload_cloudflare.py uses bucket_name + S3 keys from `.env`.
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "YOUR_R2_BUCKET_NAME"

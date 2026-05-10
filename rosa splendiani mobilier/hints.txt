@@ -1,0 +1,22 @@
+products 
+Amalfi  - Fotoliu
+Dakota - Fotoliu
+Gilda - Fotoliu
+Zante - Fotoliu
+Amalfi  - Canapea
+Dakota - Canapea
+Gilda - Canapea
+BAHIA - Canapea modulară
+Tosca - Canapea modulară
+Amalfi  - Scaun
+Dakota - Scaun
+Gilda - Scaun
+Lidia - Scaun
+Juniper - Masă extensibilă
+Dakota - Șezlong
+Melvin - Șezlong
+Dakota - masuță
+
+some have variants
+some have variante culori which is the color for their base color
+cod referinta is sku

@@ -1,0 +1,24 @@
+﻿id,title,description,category,type,collection,is_new,subtype,manufacturer,catalog_id,finishes,position,sizes,thickness,material,shape,cut,diameter,length,width,height
+1200,CleoSteel - Baterie joasă,"Wash basin mixer, 189 mm high, center distance 145 mm long, WITH CLIC/CLAC POP-UP DRAIN.",sanitare,BATERII,CleoSteel 48,False,DE BLAT,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,145 mm,,189 mm
+1201,CleoSteel - Baterie înaltă,"Wash basin mixer, 340 mm high, center distance 145 mm long, WITH CLIC/CLAC POP-UP DRAIN.",sanitare,BATERII,CleoSteel 48,False,DE BLAT,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,145 mm,,340 mm
+1202,CleoSteel - Pipă de blat,"Deck-mounted water spout, center distance 150 mm long, 233 mm high.",sanitare,BATERII,CleoSteel 48,False,DE BLAT,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,150 mm,,233 mm
+1203,CleoSteel - Mixer de blat,Deck-mounted mixer for water spout.,sanitare,BATERII,CleoSteel 48,False,DE BLAT,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,,,
+1204,CleoSteel - Baterie încastrată I,"External part for wall-mounted built-in basin mixer, 208 mm long, center distance 200 mm long.
+
+Articole complementare necesare: Art. 0580350 : Piesă încorporată pentru baterie de lavoar cu montare pe perete",sanitare,BATERII,CleoSteel 48,False,DE PERETE,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,208 mm,,
+1205,CleoSteel - Mixer de perete,Wall-mounted built-in mixer.,sanitare,BATERII,CleoSteel 48,False,DE PERETE,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,,,
+1206,CleoSteel - Baterie încastrată II,"External part for wall-mounted built-in basin mixer with plate, 210 mm long, center distance 200 mm long.
+
+Articole complementare necesare: Art. 0510000 : Sistem încorporat universal FirUnico",sanitare,BATERII,CleoSteel 48,False,DE PERETE,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,210 mm,,
+1207,CleoSteel - Baterie înaltă freestanding,"External part for floor-mounted wash basin mixer, 1123 mm high, center distance 250 mm long.
+
+Articole complementare necesare: Art. 0521474 : Piesă încorporată pentru mixer din oțel inoxidabil cu montare pe podea",sanitare,BATERII,CleoSteel 48,False,FREESTANDING,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,250 mm,,1123 mm
+1208,CleoSteel - Pipă înaltă freestanding,"Floor-mounted water spout 1/2'', center distance 250 mm long, 1145 mm high.
+
+Observații: in combinatie neaparata cu urmatoarele produse: 48.5105.0, 48.5010.9
+
+Articole complementare necesare: Art. 0521474 : Piesă încorporată pentru mixer din oțel inoxidabil cu montare pe podea",sanitare,BATERII,CleoSteel 48,False,FREESTANDING,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,250 mm,,1145 mm
+1209,CleoSteel - Baterie înaltă freestanding cu duș,External part for floor-mounted bath mixer with shower set.,sanitare,BATERII,CleoSteel 48,False,CADA,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,,,
+1210,CleoSteel - Pipă de tavan,"Ceiling-mounted water spout 1/2'', 1600 mm long.
+
+Observații: in combinatie neaparata cu urmatoarele produse: 48.5105.0, 48.5010.9",sanitare,BATERII,CleoSteel 48,False,DE TAVAN,Fir Italia,,,,,,Stainless Steel AISI 316L,,,,1600 mm,,

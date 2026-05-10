@@ -1,0 +1,27 @@
+11 products
+
+CleoSteel - Baterie joasă
+CleoSteel - Baterie înaltă 
+CleoSteel - Pipă de blat
+CleoSteel - Mixer de blat
+CleoSteel - Baterie încastrată I
+CleoSteel - Mixer de perete
+CleoSteel - Baterie încastrată II
+CleoSteel - Baterie înaltă freestanding
+CleoSteel - Pipă înaltă freestanding
+CleoSteel - Baterie înaltă freestanding cu duș
+CleoSteel - Pipă de tavan
+
+don't add observations for the end product but read them
+
+	
+	
+	Art. 0580350 : Piesă încorporată pentru baterie de lavoar cu montare pe perete
+	
+	Art. 0510000 : Sistem încorporat universal FirUnico
+	Art. 0521474 : Piesă încorporată pentru mixer din oțel inoxidabil cu montare pe podea
+in combinatie neaparata cu urmatoarele produse: 48.5105.0, 48.5010.9	Art. 0521474 : Piesă încorporată pentru mixer din oțel inoxidabil cu montare pe podea
+	
+in combinatie neaparata cu urmatoarele produse: 48.5105.0, 48.5010.9	
+
+these obs are in the csv, maybe put this info somewhere in the description in Romanian at the end.

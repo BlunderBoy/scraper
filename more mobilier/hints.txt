@@ -1,0 +1,23 @@
+this is kinda crazy
+
+these are the products
+OSO
+SOVA I
+SOVA II
+ONDA
+LAX
+LUZ
+YAN 
+OSO
+OSO
+CUT I
+EEVA
+NIL
+CUT II
+CUT III
+SOVA
+NOVA
+
+variante lemn/metal and variante piele should be just one column called variante and entries duplicated. i don't have this disctinction so create multiple variants for each.
+ignore observation column for the finished product
+if you can: DACA N-ARATA CA NAIBA - PUNETI TOATE FINISAJELE DISPONIBILE INTR-O RUBRICA DIN DREAPTA POZEI - VARIANTE DISPONIBILE -  SI SA FIE SUBIMPARTITE CA LA ASTIA PE SITE IDK

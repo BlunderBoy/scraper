@@ -1,0 +1,30 @@
+products are Petra - Vas de toaletă cu picior
+Petra - Vas de toaletă suspendat
+Petra - Bideu cu picior
+Petra - Bideu suspendat
+Petra - COLUMN I
+Petra - 42
+Petra - 60
+Petra - 80
+Petra - COLUMN II
+Petra - Cadă freestanding 150Cruise - Vas de toaletă cu picior
+Cruise - Vas de toaletă suspendat
+Cruise - Bideu cu picior
+Cruise - Bideu suspendat
+Cruise - Round 45
+Cruise - SQUARE 45
+Cruise - OVAL 65
+Cruise - OVAL 80
+Cruise - Cadă freestanding 172Like - Vas de toaletă cu picior
+Like - Vas de toaletă suspendat
+Like - Bideu cu picior
+Like - Bideu suspendat
+Like - 45
+Like - 60
+Like I - Cadă freestanding 170Like II - Cadă freestanding 170
+
+the variants are for products based on the csv.
+cod referinta is the sku for the variants
+
+
+
