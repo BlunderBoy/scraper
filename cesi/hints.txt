@@ -1,0 +1,46 @@
+for astratto 10x10:
+each product has the link in Link variante
+one product for each line with 1 variant being the standard color
+Tratto SODIO
+Tratto SABBIA
+Tratto RUGGINE
+Tratto OSSIDO
+Tratto ACQUA
+Tratto AGATA
+Obliquo SODIO
+Obliquo SABBIA
+Obliquo RUGGINE
+Obliquo OSSIDO
+Obliquo ACQUA
+Obliquo AGATA
+
+
+for reverso:
+each nume produs is a product with two variants
+Talco
+Bianco
+Cotone
+Nero
+Pompelmo
+Paprika
+Avocado
+Anice
+Pioggia
+with two variants: 7,5x15 and 7,5x7
+these two need to also be put in the dimensions field
+each link has in the Formati disponibili section a link to the other varint, these variants are described in variante produs, I provided links to the 7,5x15 variant and there is a 7,5x7,5 Reverso link to that variant so use that link to scrape the variant as well.
+
+for COLORI:
+each nume produs is a product with multiple variants:
+Bianco Matt
+Cotone Matt
+Canapa Matt
+Tortora Matt
+Torba Matt
+Nero Matt
+Salvia Matt
+Avio Matt
+Petrolio Lucidi
+Paprika Matt
+Rubino
+each link has in the Formati disponibili section a link to the other varints, these variants are described in variante produs, use those links to get data for the other variants

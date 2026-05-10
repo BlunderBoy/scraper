@@ -7,9 +7,12 @@ and contain a single hero photo, a one-line description and a download area
 with technical drawing, technical sheet, installation manual and catalogue.
 
 The site rejects Python's TLS fingerprint, so HTML is fetched via
-``curl.exe``. The CSV ``Articole complementare necesare`` column lists Romanian
-text about required complementary articles -- it is appended to the product
-``description`` (in Romanian, as per the hints).
+``curl.exe``. Description is intentionally kept short -- just the product
+subtitle (``itemprop="description"``) -- with the website's "Complementary
+necessary articles" appended on a new line when present (richer/more accurate
+than the CSV column, which occasionally has the wrong article code). The CSV
+``obs`` and ``Articole complementare necesare`` columns are used as fallbacks
+when the page does not list any compatibility info.
 
 SKU comes from the CSV's ``COD REFERINTA``.
 """
@@ -26,7 +29,7 @@ from typing import Any
 from urllib.parse import urljoin, urlparse
 
 import pandas as pd
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
@@ -117,45 +120,57 @@ def page_description(soup: BeautifulSoup) -> str:
     return "\n\n".join(dict.fromkeys(parts))
 
 
-_BOILERPLATE_RE = re.compile(
-    r"^(?:Fir Italia taps|Cleaning the surfaces|For the daily cleaning|To prevent damage|"
-    r"Avoid using|Avoid the use|Stainless steel finishings|Do not use|Use only neutral)",
-    re.IGNORECASE,
-)
+def complementary_articles_items(soup: BeautifulSoup) -> list[tuple[str, str]]:
+    """Return ``[(code, description)]`` from the website's compatibility section.
 
-
-def technical_section_text(soup: BeautifulSoup) -> str:
-    """Pick a small set of useful technical bullets, skip generic care boilerplate."""
-    out: list[str] = []
-    for h2 in soup.select("h2"):
-        title = (h2.get_text(" ", strip=True) or "").lower()
-        if title not in ("useful information", "technical details"):
+    The H2 "Complementary necessary articles" sits above a card list with one
+    ``itemListElement`` per required article. Each card holds an ``Art. XXXXXXX``
+    code in the first ``span.code`` and the article's English subtitle in the
+    following one. This is more reliable than the CSV ``Articole complementare
+    necesare`` column, which occasionally references the wrong product code.
+    """
+    for h2 in soup.find_all("h2"):
+        if "Complementary necessary articles" not in h2.get_text(" ", strip=True):
             continue
-        node = h2
-        for _ in range(40):
-            node = node.find_next_sibling()
-            if node is None:
-                break
-            if node.name == "h2":
-                break
-            if not isinstance(node, Tag):
+        items: list[tuple[str, str]] = []
+        seen: set[str] = set()
+        for card in h2.find_all_next(
+            "div", attrs={"itemprop": "itemListElement"}, limit=40
+        ):
+            h3 = card.find("h3", attrs={"itemprop": "name"})
+            if h3 is None:
                 continue
-            text = normalize_space(node.get_text(" ", strip=True))
-            if not text:
+            code_span = h3.find("span", class_="code")
+            code = normalize_space(code_span.get_text(" ", strip=True)) if code_span else ""
+            spans = card.find_all("span", class_="code")
+            desc_text = ""
+            for span in spans[1:]:
+                desc_text = normalize_space(span.get_text(" ", strip=True))
+                if desc_text:
+                    break
+            if not code:
                 continue
-            low = text.lower()
-            if "fir italia" in low and "vaprio" in low:
+            key = code.lower()
+            if key in seen:
                 continue
-            if "vaprio d'adda" in low:
-                continue
-            if _BOILERPLATE_RE.search(text):
-                continue
-            if "long lasting durability" in low or "subjected to constant stress" in low:
-                continue
-            if len(text) < 25 or len(text) > 220:
-                continue
-            out.append(text)
-    return "\n\n".join(dict.fromkeys(out))
+            seen.add(key)
+            items.append((code, desc_text))
+        return items
+    return []
+
+
+def complementary_articles_text(soup: BeautifulSoup) -> str:
+    """Format the website's compatibility list as a Romanian-headed block."""
+    items = complementary_articles_items(soup)
+    if not items:
+        return ""
+    lines = ["Articole complementare necesare:"]
+    for code, desc in items:
+        if desc:
+            lines.append(f"- {code} - {desc}")
+        else:
+            lines.append(f"- {code}")
+    return "\n".join(lines)
 
 
 _GLOBAL_PDF_BLACKLIST = re.compile(r"lookbook|brochure_generale|listino", re.IGNORECASE)
@@ -306,13 +321,13 @@ def scrape(*, limit_rows: int | None = None) -> None:
         page_desc = page_description(soup)
         if page_desc:
             description_parts.append(page_desc)
-        tech_text = technical_section_text(soup)
-        if tech_text:
-            description_parts.append(tech_text)
         if obs:
             description_parts.append(f"Observații: {obs}")
-        if comp_articles:
-            description_parts.append(f"Articole complementare necesare: {comp_articles}")
+        comp_block = complementary_articles_text(soup)
+        if not comp_block and comp_articles:
+            comp_block = f"Articole complementare necesare:\n- {comp_articles}"
+        if comp_block:
+            description_parts.append(comp_block)
         description = "\n\n".join(description_parts)
 
         gallery = hero_gallery(soup, url)

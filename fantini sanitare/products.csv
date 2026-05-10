@@ -1,513 +1,136 @@
 ﻿id,title,description,category,type,collection,is_new,subtype,manufacturer,catalog_id,finishes,position,sizes,thickness,material,shape,cut,diameter,length,width,height
 1100,Nostromo - Baterie joasă,"Single-control washbasin mixer, cylindrical handle
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- Traditional cartridge
-- 4 1/2'' spout projection
-- Water flow restricted to 1.2 gpm
-- flexible supply lines
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Davide Mercatali,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1101,Nostromo - Baterie înaltă,"Single-control vessel mixer, cylindrical handle
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- 5 3/4'' spout projection
-- Water flow restricted to 1.2 gpm
-- Traditional cartridge
-- flexible supply lines
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Davide Mercatali,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1102,Nostromo - Baterie încastrată,"Wall-mount single-control washbasin mixer, handle with lever
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- Traditional cartridge
-- 5 7/8'' spout projection
-- Spout to the left
-- Round escutcheon
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Davide Mercatali,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
 1103,Nostromo - Baterie înaltă freestanding,"Floor-mount single-control washbasin mixer, handle with lever
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- 7 1/2'' spout projection
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Davide Mercatali,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
 1104,Nostromo - Baterie bideu,"Single-control bidet mixer, handle with lever
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- 5 1/8'' spout projection
-- Traditional cartridge
-- flexible supply lines
-- Handle included
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Davide Mercatali,False,DE BIDEU,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,DE BIDEU,Fantini,,,,,,Brass,,,,,,
 1105,Nostromo - Sistem de duș încastrat,"Wall-mount non-thermostatic tub controls with handshower
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- 2-way diverter with turning knob
-- Cylindrical handshower with anti-siphon check valve
-- water plug with showerholder
-- 58'' vinyl hose
-- 1/2'' inlets
-- Water flow restricted to 1.8 gpm for handshower
-- 5.9 gpm @ 60 psi",sanitare,BATERII,Davide Mercatali,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,DUS,Fantini,,,,,,Brass,,,,,,
 1106,Nostromo - Cap de duș/cadă încastrat,"Wall-mount adjustable showerhead
 
-- Design: CRS Fantini
-- Collection: Fantini
-- 1/2'' NPT male connection
-- anti-lime scale system
-- Round escutcheon
-- Water flow restricted to 2.0 gpm
-- Compatible with all Fantini wall and ceiling mount shower arms",sanitare,BATERII,Davide Mercatali,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: CRS Fantini",sanitare,BATERII,Davide Mercatali,False,DUS,Fantini,,,,,,Brass,,,,,,
 1107,Nostromo - Set de cadă încastrat,"Wall-mount non-thermostatic tub set
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- 5 7/8'' spout projection
-- 2-way diverter with turning knob
-- Cylindrical handshower with anti-siphon check valve
-- water plug with showerholder
-- 58'' vinyl hose
-- 1/2'' inlets
-- Water flow restricted to 1.8 gpm for handshower
-- 5.9 gpm @ 60 psi",sanitare,BATERII,Davide Mercatali,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,CADA,Fantini,,,,,,Brass,,,,,,
 1108,Nostromo - Baterie înaltă freestanding cu duș,"Floor-mount single-control tub filler
 
-- Design: Davide Mercatali
-- Collection: Fantini
-- 7 7/8'' spout projection
-- handle
-- open/close handle with flow and temperature control
-- FIT handshower
-- handshower holder
-- 58'' PVC hose
-- 1/2'' inlets
-- Water flow restricted to 1.8 gpm for handshower
-- 6.84 GPM @ 60 psi
-- Traditional cartridge",sanitare,BATERII,Davide Mercatali,False,CADA,Fantini,,,,,,Brass,,,,,,
-1109,Flora - Baterie înaltă,"- Design: Vincent Van Duysen
-- Collection: Fantini
-- handles.4
-- spout projection 15 cm
-- flow restrictor 5 l/min at 3 bar
-- 90° ceramic cartridge
-- flexible supply lines
-- WITHOUT WASTE
-- Ceramic cartridges",sanitare,BATERII,Vincent Van Duysen,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
-1110,Flora -Baterie încastrată,"- Design: Vincent Van Duysen
-- Collection: Fantini
-- handles.4
-- spout projection 15 cm
-- flow restrictor 5 l/min at 3 bar
-- 90° ceramic cartridge
-- 1/2'' inlets
-- WITHOUT WASTE
-- Ceramic cartridges",sanitare,BATERII,Vincent Van Duysen,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
-1111,Flora - Baterie bideu,"- Design: Vincent Van Duysen
-- Collection: Fantini
-- handle.1
-- spout projection 12,5 cm
-- flow restrictor 5 l/min at 3 bar
-- articulated aerator
-- flexible supply lines
-- WITHOUT WASTE
-- Traditional cartridge",sanitare,BATERII,Vincent Van Duysen,False,DE BIDEU,Fantini,,,,,,Brass,,,,,,
-1112,Flora - Baterie bideu,"- Design: Vincent Van Duysen
-- Collection: Fantini
-- handle.1
-- spout projection 12,5 cm
-- flow restrictor 5 l/min at 3 bar
-- flexible supply lines
-- WITH pop-up WASTE
-- Traditional cartridge",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
-1113,Flora I - Cap de duș,"- Design: CRS Fantini
-- Collection: Fantini
-- ACQUAFIT
-- Water functions:
-- 1st function: 240 anti - limestone nozzles
-- Ø 30 cm
-- base material: stainless steel
-- check valve
-- flow restrictor 14 l/min at 3 bar
-- anti-lime scale system
-- 1/2'' inlet
-- NOTE: conditions necessary for the correct functioning: Min. Flow Rate: 12 l/min",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,300 mm,,,
-1114,Flora - Brațe de duș,"- Design: C&P
-- Collection: Fantini
-- 10 cm long
-- round backplate
-- ceiling-mount
-- 1/2'' inlet",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,100 mm,,
-1115,Flora I - Baterie pentru duș,"- Design: Vincent Van Duysen
-- Collection: Fantini
-- handles.1
-- 3-way diverter with turning knob
-- 1/2'' inlets
-- soundproof
-- for horizontal installation only
-- Traditional cartridge",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
-1116,Flora II - Baterie pentru duș,"- Design: Vincent Van Duysen
-- Collection: Fantini
-- handle.1
-- with rosaces
-- 2-way diverter with turning knob
-- 1/2'' inlets
-- soundproof
-- for horizontal installation only",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Davide Mercatali",sanitare,BATERII,Davide Mercatali,False,CADA,Fantini,,,,,,Brass,,,,,,
+1109,Flora - Baterie înaltă,Design: Vincent Van Duysen,sanitare,BATERII,Vincent Van Duysen,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+1110,Flora -Baterie încastrată,Design: Vincent Van Duysen,sanitare,BATERII,Vincent Van Duysen,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+1111,Flora - Baterie bideu,Design: Vincent Van Duysen,sanitare,BATERII,Vincent Van Duysen,False,DE BIDEU,Fantini,,,,,,Brass,,,,,,
+1112,Flora - Baterie bideu,Design: Vincent Van Duysen,sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
+1113,Flora I - Cap de duș,Design: CRS Fantini,sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
+1114,Flora - Brațe de duș,Design: C&P,sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
+1115,Flora I - Baterie pentru duș,Design: Vincent Van Duysen,sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
+1116,Flora II - Baterie pentru duș,Design: Vincent Van Duysen,sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
 1117,Flora - Sistem de duș încastrat,"Built-in bathtub mixer
 
-- Design: Vincent Van Duysen
-- Collection: Fantini
-- handles.4
-- without spout
-- 2-way diverter with turning knob
-- FLORA handshower
-- water plug with showerholder
-- 150 cm PVC flexible
-- 90° ceramic cartridge
-- 1/2'' inlets
-- Ceramic cartridges",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
-1118,Flora III - Baterie pentru duș,"- Design: Vincent Van Duysen
-- Collection: Fantini
-- handle.4
-- 2-way shut-off diverter with turning knob
-- for horizontal installation only
-- 3/4'' inlets
-- Thermostatic cartridge",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Vincent Van Duysen",sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
+1118,Flora III - Baterie pentru duș,Design: Vincent Van Duysen,sanitare,BATERII,Vincent Van Duysen,False,DUS,Fantini,,,,,,Brass,,,,,,
 1119,Flora - Baterie înaltă freestanding cu duș,"Floor-mount bathtub mixer
 
-- Design: Vincent Van Duysen
-- Collection: Fantini
-- handle.1
-- spout projection 20 cm
-- open/close handle with flow and temperature control
-- FLORA handshower
-- handshower holder
-- 150 cm flexible
-- 1/2'' inlets
-- on foot
-- Traditional cartridge",sanitare,BATERII,Vincent Van Duysen,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Vincent Van Duysen",sanitare,BATERII,Vincent Van Duysen,False,CADA,Fantini,,,,,,Brass,,,,,,
 1120,Flora - Set de cadă încastrat,"Built-in bathtub mixer
 
-- Design: Vincent Van Duysen
-- Collection: Fantini
-- handles.4
-- spout projection 20 cm
-- 2-way diverter with turning knob
-- FLORA handshower
-- water plug with showerholder
-- 150 cm PVC flexible
-- 90° ceramic cartridge
-- 1/2'' inlets
-- Ceramic cartridges",sanitare,BATERII,Vincent Van Duysen,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Vincent Van Duysen",sanitare,BATERII,Vincent Van Duysen,False,CADA,Fantini,,,,,,Brass,,,,,,
 1121,AW/PIPE II - Baterie înaltă,"Three-hole washbasin mixer
 
-- Design: Marcel Wanders
-- Collection: Aboutwater Boffi Fantini
-- 7 7/8'' spout projection
-- Without drain
-- 1/4 turn ceramic disc cartridge
-- flexible supply lines
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Marcel Wanders,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Marcel Wanders",sanitare,BATERII,Marcel Wanders,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1122,AW/PIPE I - Baterie înaltă,"Two-hole washbasin mixer with single-control
 
-- Design: Marcel Wanders
-- Collection: Aboutwater Boffi Fantini
-- Traditional cartridge
-- 7 7/8'' spout projection
-- Without drain
-- flexible supply lines
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Marcel Wanders,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Marcel Wanders",sanitare,BATERII,Marcel Wanders,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1123,AW/PIPE I - Baterie încastrată,"Wall-mount washbasin mixer
 
-- Design: Marcel Wanders
-- Collection: Aboutwater Boffi Fantini
-- 8 5/8'' spout projection
-- Without drain
-- Water flow restricted to 1.2 gpm
-- 1/2'' inlets
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Marcel Wanders,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+Design: Marcel Wanders",sanitare,BATERII,Marcel Wanders,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
 1124,AW/PIPE II - Baterie încastrată,"Wall-mount three-hole washbasin mixer
 
-- Design: Marcel Wanders
-- Collection: Aboutwater Boffi Fantini
-- 8 5/8'' spout projection
-- Without drain
-- 1/4 turn ceramic disc cartridge
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Marcel Wanders,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+Design: Marcel Wanders",sanitare,BATERII,Marcel Wanders,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
 1125,AW/PIPE II - Sistem de duș încastrat,"Built-in shower mixer
 
-- Design: Marcel Wanders
-- Collection: Aboutwater Boffi Fantini
-- 2-way diverter with turning knob
-- FIT handshower
-- water plug with showerholder
-- 58'' PVC hose
-- 1/2'' NPT inlet
-- Traditional cartridge",sanitare,BATERII,Marcel Wanders,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Marcel Wanders",sanitare,BATERII,Marcel Wanders,False,DUS,Fantini,,,,,,Brass,,,,,,
 1126,AW/PIPE - Baterie înaltă freestanding cu duș,"Floor-mount single-control tub filler
 
-- Design: Marcel Wanders
-- Collection: Aboutwater Boffi Fantini
-- spout projection 19,9 cm
-- open/close handle with flow and temperature control
-- FIT handshower
-- handshower holder
-- 58'' PVC hose
-- 1/2'' inlets
-- Traditional cartridge
-- on foot
-- 6.0 gpm @ 60 psi",sanitare,BATERII,Marcel Wanders,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Marcel Wanders",sanitare,BATERII,Marcel Wanders,False,CADA,Fantini,,,,,,Brass,,,,,,
 1127,AW/PIPE - Set de cadă încastrat,"Built-in bathtub mixer
 
-- Design: Marcel Wanders
-- Collection: Aboutwater Boffi Fantini
-- 8 3/4'' spout projection
-- 2-way diverter with turning knob
-- FIT handshower
-- water plug with showerholder
-- 58'' PVC hose
-- 1/2'' NPT inlet
-- Traditional cartridge
-- 6.0 gpm @ 60 psi",sanitare,BATERII,Marcel Wanders,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Marcel Wanders",sanitare,BATERII,Marcel Wanders,False,CADA,Fantini,,,,,,Brass,,,,,,
 1128,AC/ECLIPSE - Baterie joasă,"Single-control washbasin mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- Traditional cartridge
-- 5'' spout projection
-- Without drain
-- Water flow restricted to 1.2 gpm
-- flexible supply lines
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1129,AC/ECLIPSE - Baterie înaltă,"Single-control vessel mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- Traditional cartridge
-- 8'' spout projection
-- Without drain
-- Handle included
-- Water flow restricted to 1.2 gpm
-- flexible supply lines
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1130,AC/ECLIPSE I - Baterie înaltă,"Two-hole washbasin mixer with single-control
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- Traditional cartridge
-- 6'' spout projection
-- Without drain
-- flexible supply lines
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1131,AC/ECLIPSE II - Baterie înaltă,"Three-hole washbasin mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 6'' spout projection
-- Without drain
-- 1/4 turn ceramic disc cartridge
-- flexible supply lines
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1132,AC/ECLIPSE I - Baterie încastrată,"Wall-mount washbasin mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 9'' spout projection
-- Without drain
-- Water flow restricted to 1.2 gpm
-- 1/2'' inlets
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
 1133,AC/ECLIPSE II - Baterie încastrată,"Wall-mount three-hole washbasin mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 8 5/8'' spout projection
-- Without drain
-- 1/4 turn ceramic disc cartridge
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
 1134,AC/ECLIPSE - Baterie înaltă freestanding,"Floor-mount single-control washbasin mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 7 5/8'' projection
-- Without drain
-- Water flow restricted to 1.2 gpm
-- 1/2'' inlets
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
 1135,AC/ECLIPSE - Pipă înaltă freestanding,"Floor-mount washbasin spout
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 8 7/8'' spout projection
-- 1/2'' inlet
-- Water flow restricted to 1.2 gpm",sanitare,BATERII,Studiocharlie,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
 1136,AC/ECLIPSE - Control separat,"Wall-mount separate control for washbasin spouts
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 1/2'' inlet
-- Round escutcheon
-- 7.6 gpm @ 60 psi",sanitare,BATERII,Studiocharlie,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,FREESTANDING,Fantini,,,,,,Brass,,,,,,
 1137,AC/ECLIPSE - Baterie bideu,"Single-hole bidet mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- Traditional cartridge
-- 5'' spout projection
-- Without drain
-- Water flow restricted to 1.2 gpm
-- articulated aerator
-- flexible supply lines
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Studiocharlie,False,DE BIDEU,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DE BIDEU,Fantini,,,,,,Brass,,,,,,
 1138,AC/ECLIPSE - Sistem de duș încastrat,"1/2'' Thermostatic mixer with 3-way diverter
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- Thermostatic cartridge
-- For horizontal installation
-- 1/2'' NPT inlets and outlets
-- Accessible shut-off valves and filters",sanitare,BATERII,Studiocharlie,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,DUS,Fantini,,,,,,Brass,,,,,,
 1139,AC/ECLIPSE - Set de cadă încastrat,"Built-in bathtub mixer
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 8 3/4'' spout projection
-- 2-way diverter with turning knob
-- water plug with showerholder
-- 58'' PVC hose
-- 1/2'' NPT inlet
-- Traditional cartridge
-- 6.0 gpm @ 60 psi",sanitare,BATERII,Studiocharlie,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,CADA,Fantini,,,,,,Brass,,,,,,
 1140,AC/ECLIPSE - Set de cadă de blat,"4-Hole Roman tub set
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- without spout
-- 2-way diverter with turning knob
-- 58'' metal hose
-- 90° ceramic cartridge
-- 1/2'' inlets
-- flexible supply lines
-- Water flow restricted to 1.8 gpm for handshower
-- Ceramic cartridges",sanitare,BATERII,Studiocharlie,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,CADA,Fantini,,,,,,Brass,,,,,,
 1141,AC/ECLIPSE - Baterie înaltă freestanding cu duș,"Floor-mount single-control tub filler
 
-- Design: Studiocharlie
-- Collection: Aboutwater Boffi Fantini
-- 9 3/4'' spout projection
-- open/close handle with flow and temperature control
-- handshower holder
-- 58'' PVC hose
-- 1/2'' inlets
-- on foot
-- Traditional cartridge
-- 6.0 gpm @ 60 psi",sanitare,BATERII,Studiocharlie,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Studiocharlie",sanitare,BATERII,Studiocharlie,False,CADA,Fantini,,,,,,Brass,,,,,,
 1142,AF/21 - Baterie joasă,"Three-hole washbasin mixer - Handles in Marquinia black Marble
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- Ceramic cartridges
-- 6 1/8'' spout projection
-- Without drain
-- Aerated flow
-- 1/4 turn ceramic disc cartridge
-- flexible supply lines
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Naoto Fukasawa,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1143,AF/21 - Baterie înaltă,"Three-hole vessel mixer - Handles in Carrara white Marble
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- Ceramic cartridges
-- 6 1/8'' spout projection
-- Without drain
-- Aerated flow
-- 1/4 turn ceramic disc cartridge
-- flexible supply lines
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Naoto Fukasawa,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,DE BLAT,Fantini,,,,,,Brass,,,,,,
 1144,AF/21 I - Baterie încastrată,"Wall-mount single-control washbasin mixer - Handle in Carrara white Marble
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- 8 1/8'' spout projection
-- Without drain
-- Aerated flow
-- Progressive cartridge
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Naoto Fukasawa,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
 1145,AF/21 II - Baterie încastrată,"Wall-mount three-hole washbasin mixer - Handles in Marquinia black Marble
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- 8 1/8'' spout projection
-- Without drain
-- Aerated flow
-- 1/4 turn ceramic disc cartridge
-- Water flow restricted to 1.2 gpm
-- Drain not included, please select W095U or W097U in the Miscellaneous Articles section.",sanitare,BATERII,Naoto Fukasawa,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,DE PERETE,Fantini,,,,,,Brass,,,,,,
 1146,AF/21 - Sistem de duș încastrat,"Wall-mount tub filler - Handles in Marquinia black Marble
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- without spout
-- Cylindrical handshower with anti-siphon check valve
-- 1/2'' female inlets
-- Handshower holder with 58'' PVC hose and water outlet
-- 2-way diverter
-- 1/4 turn ceramic disc cartridge
-- Water flow restricted to 1.8 gpm for handshower",sanitare,BATERII,Naoto Fukasawa,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,DUS,Fantini,,,,,,Brass,,,,,,
 1147,AF/21 - Duș de mână,"Wall-mount handshower set
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- Cylindrical handshower with anti-siphon check valve
-- anti-lime scale system
-- 58'' PVC hose
-- Water outlet with holder
-- 1/2'' NPT male connection
-- Water flow restricted to 1.8 gpm",sanitare,BATERII,Naoto Fukasawa,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,DUS,Fantini,,,,,,Brass,,,,,,
 1148,AF/21 - Baterie pentru duș,"Built-in shower mixer - Handles in Carrara white Marble
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- Non-thermostatic 1/2'' mixer
-- Flow and temperature controlled by a progressive cartridge
-- 2-way diverter
-- 6.0 gpm @ 60 psi (primary outlet)
-- 5.5 gpm @ 60 psi (secondary outlet)
-- To be installed with a remote pressure balance valve",sanitare,BATERII,Naoto Fukasawa,False,DUS,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,DUS,Fantini,,,,,,Brass,,,,,,
 1149,AF/21 - Baterie înaltă freestanding cu duș,"Floor-mount single-control tub filler
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- 9 7/8'' spout projection
-- Cylindrical handshower with anti-siphon check valve
-- Pull-out diverter for handshower
-- 58'' PVC hose
-- Traditional cartridge
-- Water flow restricted to 1.8 gpm for handshower
-- 6.2 gpm @ 60 psi",sanitare,BATERII,Naoto Fukasawa,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,CADA,Fantini,,,,,,Brass,,,,,,
 1150,AF/21 - Set de cadă încastrat,"Wall-mount tub filler - Handles in Carrara white Marble
 
-- Design: Naoto Fukasawa
-- Collection: Aboutwater Boffi Fantini
-- 8 1/2'' spout projection
-- Cylindrical handshower with anti-siphon check valve
-- 1/2'' female inlets
-- Handshower holder with 58'' PVC hose and water outlet
-- 2-way diverter
-- 1/4 turn ceramic disc cartridge
-- Water flow restricted to 1.8 gpm for handshower
-- 7.1 gpm @ 60 psi",sanitare,BATERII,Naoto Fukasawa,False,CADA,Fantini,,,,,,Brass,,,,,,
+Design: Naoto Fukasawa",sanitare,BATERII,Naoto Fukasawa,False,CADA,Fantini,,,,,,Brass,,,,,,

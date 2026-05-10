@@ -2,15 +2,22 @@
 Fantini -- scrape product variant pages from ``links.csv``.
 
 Row model: each CSV row is one variant (a finish), with its own URL like
-``https://www.fantini.it/en-us/product/49-3864-5002e904wu`` and its own
-``COD REFERINTA``. Variants in the same model share design / collection /
-feature list / PDF documents, so product-level data is taken from the first
+``https://www.fantini.it/en-us/product/49-3864-5002e904wu``. Variants in the
+same model share product-level data (description, PDFs) taken from the first
 row of each ``(Categorie, Subcategorie, SUB-SUBCATEGORIE, Colectie, Nume
-produs)`` group; per-variant ``og:image`` (``IMM_..._<sku>.jpg``) becomes the
-variant's gallery.
+produs)`` group.
 
-SKU: ``COD REFERINTA`` from the CSV when set, else ``FAN_<variant_id>``. The
-spreadsheet sometimes already prefixes ``FAN_`` -- left as-is.
+Description: the short subtitle in ``<h3 class="text-subdisplay ...">`` on the
+product page (e.g. "Single-control washbasin mixer, cylindrical handle"). The
+old paragraph/JSON-LD descriptions were marketing duplicates and got dropped.
+
+Thumbnails: the per-variant ``og:image`` URLs on the live site 404, so the
+gallery photo is sourced from the global ``/en-ww/find-products`` listing page
+instead. The listing groups products by *collection* (Nostromo, Flora,
+AF/21...) so all variants of a given collection get the same hero image.
+
+SKU: always ``FAN_<variant_id>`` -- the spreadsheet ``COD REFERINTA`` values
+contained inconsistent prefixes/concatenations so we ignore them entirely.
 """
 from __future__ import annotations
 
@@ -57,6 +64,13 @@ MANUFACTURER = "Fantini"
 SKU_PREFIX = "FAN"
 LINKS_CSV = "links.csv"
 
+# en-ww (worldwide) listing has the full bathroom-fittings catalogue; the en-us
+# listing is a subset that omits collections such as Flora.
+FIND_PRODUCTS_URLS = (
+    "https://www.fantini.it/en-ww/find-products",
+    "https://www.fantini.it/en-us/find-products",
+)
+
 START_PRODUCT_ID = 1100
 START_VARIANT_ID = 7000
 START_TECH_PDF_ID = 1
@@ -69,6 +83,25 @@ HEADERS = {
     ),
     "Accept-Language": "en-US,en;q=0.9",
 }
+
+# Roman-numeral / arabic variant suffixes appended to a collection name
+# (e.g. "Flora II" -> "Flora", "AF/21 I" -> "AF/21").
+_ROMAN_SUFFIX_RE = re.compile(r"\s+(?:[IVX]{1,4}|[0-9]+)$", re.I)
+
+
+def collection_lookup_key(nume_produs: str) -> str:
+    """Return the collection slug used by the find-products listing (case-folded).
+
+    ``"Flora I - Baterie înaltă"`` -> ``"flora"``;
+    ``"AF/21 II - Baterie încastrată"`` -> ``"af/21"``;
+    ``"Nostromo - Baterie joasă"``    -> ``"nostromo"``.
+    """
+    s = (nume_produs or "").strip()
+    if not s:
+        return ""
+    head = re.split(r"\s+-\s+|\s+-", s, maxsplit=1)[0].strip()
+    head = _ROMAN_SUFFIX_RE.sub("", head).strip()
+    return head.casefold()
 
 # PDF anchors that come from the global footer / company info, not the product.
 GLOBAL_PDF_LABEL_BLACKLIST = re.compile(r"code of ethics|organizational model|modello di organizzazione|codice etico", re.I)
@@ -85,53 +118,6 @@ def fetch_soup(url: str, session: requests.Session) -> BeautifulSoup | None:
     except Exception as e:
         print(f"  Request failed {url}: {e}")
         return None
-
-
-def og_image(soup: BeautifulSoup) -> str:
-    og = soup.select_one('meta[property="og:image"]')
-    if og and og.get("content"):
-        return og["content"].strip()
-    return ""
-
-
-def jsonld_image(soup: BeautifulSoup) -> str:
-    for s in soup.select('script[type="application/ld+json"]'):
-        try:
-            data = json.loads(s.string or "")
-        except Exception:
-            continue
-        if isinstance(data, dict):
-            img = data.get("image")
-            if isinstance(img, list) and img:
-                return clean_cell(img[0])
-            if isinstance(img, str):
-                return clean_cell(img)
-    return ""
-
-
-def hero_gallery(soup: BeautifulSoup) -> list[str]:
-    out: list[str] = []
-    og = og_image(soup)
-    if og:
-        out.append(og)
-    j = jsonld_image(soup)
-    if j and j not in out:
-        out.append(j)
-    return dedupe_urls([u for u in out if u])
-
-
-def header_block(soup: BeautifulSoup) -> Tag | None:
-    return soup.select_one('[class*="component-block-header-product"]')
-
-
-def collection_name(soup: BeautifulSoup) -> str:
-    h1 = soup.select_one("h1")
-    return h1.get_text(" ", strip=True) if h1 else ""
-
-
-def feature_subtitle(soup: BeautifulSoup) -> str:
-    h3 = soup.select_one('[class*="component-block-header-product"] h3, [class*="component-details-product"] h3, h3')
-    return h3.get_text(" ", strip=True) if h3 else ""
 
 
 def design_and_collection(soup: BeautifulSoup) -> dict[str, str]:
@@ -151,39 +137,66 @@ def design_and_collection(soup: BeautifulSoup) -> dict[str, str]:
     return out
 
 
-def feature_bullets(soup: BeautifulSoup) -> list[str]:
-    """Free-text feature list under header (4 1/2'' projection, 1.2 gpm, ...)."""
-    block = header_block(soup)
-    if block is None:
-        return []
-    found: list[str] = []
-    seen: set[str] = set()
-    for el in block.find_all(["li", "p"]):
-        t = normalize_space(el.get_text(" ", strip=True))
-        if not t or len(t) < 4:
-            continue
-        if t.lower().startswith(("art.", "finish", "favourite", "add to list")):
-            continue
-        if t.lower() in ("design:", "collection:"):
-            continue
-        if t in seen:
-            continue
-        seen.add(t)
-        found.append(t)
-    return found[:30]
-
-
 def description_text(soup: BeautifulSoup) -> str:
-    """Subtitle + bullet feature list. The page's meta/JSON-LD descriptions repeat the
-    same phrase three times across sources, so we keep just the structured content."""
-    parts: list[str] = []
-    subtitle = feature_subtitle(soup)
-    if subtitle:
-        parts.append(subtitle)
-    bullets = feature_bullets(soup)
-    if bullets:
-        parts.append("\n".join(f"- {b}" for b in bullets))
-    return "\n\n".join(dict.fromkeys(parts))
+    """Just the short product subtitle.
+
+    Lives in ``<h3 class="text-subdisplay ...">`` and reads like
+    "Single-control washbasin mixer, cylindrical handle". Anything else on the
+    page (paragraph text, JSON-LD, meta description) is marketing duplication
+    of the same phrase three times.
+    """
+    h3 = soup.find("h3", class_=lambda c: bool(c) and "text-subdisplay" in c)
+    if h3 is None:
+        for h in soup.find_all("h3"):
+            cls = " ".join(h.get("class") or [])
+            if "subdisplay" in cls:
+                h3 = h
+                break
+    if h3 is None:
+        return ""
+    return normalize_space(h3.get_text(" ", strip=True))
+
+
+def fetch_find_products_thumbnails(session: requests.Session) -> dict[str, str]:
+    """Return ``{collection_name_casefold: thumbnail_url}`` scraped from the find-products listings.
+
+    Each card is ``<header class="...text-body-big...">{collection name}</header>``
+    followed by a ``<div class="component-multimedia">`` whose ``<img src=...>``
+    is the cover photo. The en-ww page is the full catalogue; en-us is queried
+    as a fallback for anything missing.
+    """
+    out: dict[str, str] = {}
+    for url in FIND_PRODUCTS_URLS:
+        try:
+            r = session.get(url, timeout=25)
+            if r.status_code != 200:
+                print(f"  find-products HTTP {r.status_code} for {url}")
+                continue
+        except Exception as e:
+            print(f"  find-products fetch failed {url}: {e}")
+            continue
+        soup = BeautifulSoup(r.text, "html.parser")
+        for header in soup.find_all(
+            "header",
+            class_=lambda c: bool(c) and "text-body-big" in c,
+        ):
+            name = normalize_space(header.get_text(" ", strip=True))
+            if not name:
+                continue
+            key = name.casefold()
+            if key in out:
+                continue
+            pic = header.find_next("div", class_="component-multimedia")
+            if not pic:
+                continue
+            img = pic.find("img")
+            if not img:
+                continue
+            src = (img.get("src") or "").strip()
+            if src and src not in ("data:",) and not src.startswith("data:"):
+                out[key] = src
+        time.sleep(0.05)
+    return out
 
 
 def collect_pdfs(soup: BeautifulSoup, page_url: str) -> list[dict[str, str]]:
@@ -243,6 +256,10 @@ def scrape(*, limit_rows: int | None = None) -> None:
     session = requests.Session()
     session.headers.update(HEADERS)
 
+    print("Fetching collection thumbnails from /find-products ...")
+    collection_thumbs = fetch_find_products_thumbnails(session)
+    print(f"  loaded {len(collection_thumbs)} collection thumbnails")
+
     cache: dict[str, BeautifulSoup] = {}
 
     def get_soup(url: str) -> BeautifulSoup | None:
@@ -275,6 +292,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
     pp_id_counter = START_PRODUCT_PDF_ID
     stamp = created_stamp_now()
     product_key_to_id: dict[tuple, int] = {}
+    product_id_to_thumbnail: dict[int, str] = {}
 
     for k in key_order:
         group = key_to_rows[k]
@@ -296,6 +314,10 @@ def scrape(*, limit_rows: int | None = None) -> None:
         description = description_text(soup)
         if dc.get("design") and "Design:" not in description:
             description = (description + f"\n\nDesign: {dc['design']}").strip()
+
+        thumbnail = collection_thumbs.get(collection_lookup_key(np_), "")
+        if not thumbnail:
+            print(f"  WARN no thumbnail for {np_!r} (collection key={collection_lookup_key(np_)!r})")
 
         # ``finishes`` would just repeat the per-variant colour codes; leave blank.
         finishes = ""
@@ -327,6 +349,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         }
         products_db.append(product)
         product_key_to_id[k] = p_id
+        product_id_to_thumbnail[p_id] = thumbnail
 
         for sort_i, doc in enumerate(collect_pdfs(soup, first_url)):
             u = doc["url"]
@@ -358,18 +381,15 @@ def scrape(*, limit_rows: int | None = None) -> None:
             continue
         pid = product_key_to_id[k]
         url = clean_cell(row.get("Link variante"))
-        soup = get_soup(url)
-        gallery: list[str] = []
-        if soup is not None:
-            gallery = hero_gallery(soup)
 
-        # The Fantini website exposes a single article number per finish (e.g. ``5002E904WU``).
-        # The spreadsheet sometimes pre-pends ``FAN_``; strip it so every SKU is uniform.
-        cod_raw = clean_cell(row.get("COD REFERINTA"))
-        if cod_raw.upper().startswith("FAN_"):
-            cod_raw = cod_raw[4:]
-        sku = variant_sku(SKU_PREFIX, v_id, cod_raw)
+        # COD REFERINTA from the spreadsheet has bad data (sometimes two SKUs
+        # concatenated with ``+``, sometimes a ``FAN_`` prefix, etc.) so we
+        # generate a clean per-variant SKU instead.
+        sku = f"{SKU_PREFIX}_{v_id}"
         color = default_color(variant_color(row))
+
+        thumbnail = product_id_to_thumbnail.get(pid, "")
+        gallery = [thumbnail] if thumbnail else []
 
         variants_db.append({
             "id": v_id,

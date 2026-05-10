@@ -22,6 +22,15 @@ databases with ``UNIQUE(sku)`` can load the merged variants CSV.
 
 Outputs (default): merged_products.csv, merged_variants.csv, merged_technical_pdfs.csv,
 merged_product_pdfs.csv
+
+After the merge writes are complete, the Romanian translation step from
+``translate_to_ro.py`` is invoked automatically. It snapshots the freshly
+merged products + variants files to ``merged_<name>_original.csv`` and
+overwrites ``merged_products.csv`` with the Romanian rewrite (variants are
+left as-is per project policy: colors and variant names stay in their original
+form). Pass ``--no-translate`` to skip this step. Translation is cached in
+``translation_cache.sqlite`` so re-runs only translate cells whose source text
+changed.
 """
 
 from __future__ import annotations
@@ -625,6 +634,24 @@ def main() -> int:
         action="store_true",
         help="Do not enforce globally unique numeric ids or cascade ids to variants.",
     )
+    parser.add_argument(
+        "--no-translate",
+        action="store_true",
+        help="Skip the Romanian translation step that normally runs after merge "
+        "(see translate_to_ro.py).",
+    )
+    parser.add_argument(
+        "--translate-workers",
+        type=int,
+        default=8,
+        help="Concurrency for the translation step (default: 8).",
+    )
+    parser.add_argument(
+        "--translate-model",
+        default=None,
+        help="Cloudflare Workers AI model id for translation "
+        "(default uses translate_to_ro.DEFAULT_MODEL).",
+    )
     args = parser.parse_args()
     root: Path = args.root.resolve()
     brand_dirs = resolve_brand_directories(root, args.folders)
@@ -731,7 +758,68 @@ def main() -> int:
 
         print(f"[ok] {target}: {len(rows)} rows -> {out_path} ({len(paths)} sources)", flush=True)
 
+    if not args.no_translate and "products.csv" in merged:
+        rc = _run_translation_step(
+            root=root,
+            prefix=args.prefix,
+            workers=args.translate_workers,
+            model_override=args.translate_model,
+        )
+        if rc != 0:
+            exit_status = exit_status or rc
+
     return exit_status
+
+
+def _run_translation_step(
+    *,
+    root: Path,
+    prefix: str,
+    workers: int,
+    model_override: str | None,
+) -> int:
+    """Invoke translate_to_ro after the merge step.
+
+    The translator only knows the default merged paths; we honour ``--prefix``
+    by refusing to translate when the user has chosen a non-default prefix --
+    they probably want a side-by-side comparison run that is not yet the
+    canonical Romanian copy.
+    """
+    if prefix != "merged_":
+        print(
+            f"[translate] skipped (non-default --prefix={prefix!r}; "
+            "run translate_to_ro.py manually if needed)",
+            file=sys.stderr,
+        )
+        return 0
+
+    try:
+        import translate_to_ro
+    except ImportError as e:
+        print(f"[translate] skipped: cannot import translate_to_ro ({e})", file=sys.stderr)
+        return 0
+
+    products_csv = root / f"{prefix}products.csv"
+    if not products_csv.is_file():
+        print(f"[translate] skipped: {products_csv} not found", file=sys.stderr)
+        return 0
+
+    print("\n[translate] running Romanian translation step "
+          "(disable with --no-translate)", flush=True)
+    model = model_override or translate_to_ro.DEFAULT_MODEL
+    try:
+        return translate_to_ro.run(
+            limit=None,
+            model=model,
+            workers=workers,
+            force=False,
+            dry_run=False,
+            no_snapshot=False,
+            force_snapshot=True,
+        )
+    except translate_to_ro.CloudflareAuthError as e:
+        print(f"\n[translate] aborted: {e}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

@@ -9,9 +9,9 @@ Sources:
 - ``https://moooiceramicsurfaces.com/en/surface/...`` — Moooi by ABK: ``minimali``
   color grid, spec list, catalogue PDF.
 
-**Product**: one row in ``products.csv`` per spreadsheet line: ``Nume produs`` (shade
-or décor) + ``Colectie`` → title via ``format_csv_title`` (e.g. ``Concrete Ash — Blend``).
-Collection copy, sizes, and finishes come from the scraped page for that row’s URL.
+**Product**: one row in ``products.csv`` per spreadsheet line. The title is the
+raw ``Nume produs`` from the CSV (e.g. ``Concrete Ash``); collection copy, sizes,
+and finishes come from the scraped page for that row’s URL.
 
 **Variants**: exactly **one** variant per product (the same shade); ``gallery_photos``
 matches that name to the site’s colour grid. Duplicate display titles (e.g. two
@@ -43,7 +43,6 @@ from scraper_brand_utils import (
     dedupe_urls,
     default_color,
     enrich_technical_pdf_title,
-    format_csv_title,
     norm_key,
     normalize_category,
     normalize_space,
@@ -465,7 +464,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         site_h1 = clean_cell(parsed.get("title", ""))
         nume = clean_cell(row.get("Nume produs"))
         colectie = clean_cell(row.get("Colectie"))
-        base_title = format_csv_title(nume, colectie)
+        base_title = nume
         nk_base = norm_key(base_title)
         title_occurrences[nk_base] = title_occurrences.get(nk_base, 0) + 1
         n_dup = title_occurrences[nk_base]
