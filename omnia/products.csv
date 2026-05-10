@@ -1,32 +1,32 @@
-﻿id,title,description,category,type,collection,is_new,subtype,manufacturer,catalog_id,finishes,position,sizes,thickness,material,shape
+﻿id,title,description,category,type,collection,is_new,subtype,manufacturer,catalog_id,finishes,position,sizes,thickness,material,shape,cut,diameter,length,width,height
 87,Natural Light Oak,"ECCO MAXI PLANK combines advanced SPC technology and refined design, offering high durability and performance for stylish, high-traffic interiors
 
 Our exclusive SPC flooring line is a perfect fusion of cutting-edge technology and aesthetic design
 
 ECCO MAXI PLANK is designed for those who refuse to compromise between style and functionality, offering an unprecedented option to transform any space into a livable work of art
 
-With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,6 (5+1) X 228 X 1540 mm,"0,70mm | 1,00mm",SPC,
+With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,228 x 1540 mm,6 mm,SPC,,,,1540 mm,228 mm,
 88,Natural Bleached Oak,"ECCO MAXI PLANK combines advanced SPC technology and refined design, offering high durability and performance for stylish, high-traffic interiors
 
 Our exclusive SPC flooring line is a perfect fusion of cutting-edge technology and aesthetic design
 
 ECCO MAXI PLANK is designed for those who refuse to compromise between style and functionality, offering an unprecedented option to transform any space into a livable work of art
 
-With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,6 (5+1) X 228 X 1540 mm,"0,70mm | 1,00mm",SPC,
+With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,228 x 1540 mm,6 mm,SPC,,,,1540 mm,228 mm,
 89,Natural Oak,"ECCO MAXI PLANK combines advanced SPC technology and refined design, offering high durability and performance for stylish, high-traffic interiors
 
 Our exclusive SPC flooring line is a perfect fusion of cutting-edge technology and aesthetic design
 
 ECCO MAXI PLANK is designed for those who refuse to compromise between style and functionality, offering an unprecedented option to transform any space into a livable work of art
 
-With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,6 (5+1) X 228 X 1540 mm,"0,70mm | 1,00mm",SPC,
+With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,228 x 1540 mm,6 mm,SPC,,,,1540 mm,228 mm,
 90,Natural Grey Oak,"ECCO MAXI PLANK combines advanced SPC technology and refined design, offering high durability and performance for stylish, high-traffic interiors
 
 Our exclusive SPC flooring line is a perfect fusion of cutting-edge technology and aesthetic design
 
 ECCO MAXI PLANK is designed for those who refuse to compromise between style and functionality, offering an unprecedented option to transform any space into a livable work of art
 
-With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,6 (5+1) X 228 X 1540 mm,"0,70mm | 1,00mm",SPC,
+With its 0.70 mm wear layer, our collection is unique in the market, offering a product with greater durability, enhanced resistance to wear, scratches, and dents (AC6), ensuring our collection is also suitable for high-traffic areas",spc,ASPECT LEMN,ECCO MAXI PLANK,False,,Omnia Floor,,,Podea,228 x 1540 mm,6 mm,SPC,,,,1540 mm,228 mm,
 91,Rovere Mielato,"OMNIA PREMIUM is a high-end SPC flooring collection with usage class 42, available in wide plank and herringbone formats
 
 With a usage class of 42, OMNIA premium floors ensure exceptional durability, perfect for residential, commercial, and industrial environments subject to intense loads
@@ -35,7 +35,7 @@ Thanks to the integrated insulating underlay, impact noise is reduced by up to 2
 
 The matte and textured finish gives the product an authentic look and an extremely natural feel, making the floor a distinctive element in any environment
 
-Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,148X 592 mm | 229 X 1220 mm,"0,55mm | 1,00mm",SPC,
+Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,"148 x 592 mm, 229 x 1220 mm",,SPC,,,,"592 mm, 1220 mm","148 mm, 229 mm",
 92,Rovere Heritage,"OMNIA PREMIUM is a high-end SPC flooring collection with usage class 42, available in wide plank and herringbone formats
 
 With a usage class of 42, OMNIA premium floors ensure exceptional durability, perfect for residential, commercial, and industrial environments subject to intense loads
@@ -44,7 +44,7 @@ Thanks to the integrated insulating underlay, impact noise is reduced by up to 2
 
 The matte and textured finish gives the product an authentic look and an extremely natural feel, making the floor a distinctive element in any environment
 
-Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,148X 592 mm | 229 X 1220 mm,"0,55mm | 1,00mm",SPC,
+Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,"148 x 592 mm, 229 x 1220 mm",,SPC,,,,"592 mm, 1220 mm","148 mm, 229 mm",
 93,Rovere Ambrato,"OMNIA PREMIUM is a high-end SPC flooring collection with usage class 42, available in wide plank and herringbone formats
 
 With a usage class of 42, OMNIA premium floors ensure exceptional durability, perfect for residential, commercial, and industrial environments subject to intense loads
@@ -53,7 +53,7 @@ Thanks to the integrated insulating underlay, impact noise is reduced by up to 2
 
 The matte and textured finish gives the product an authentic look and an extremely natural feel, making the floor a distinctive element in any environment
 
-Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,148X 592 mm | 229 X 1220 mm,"0,55mm | 1,00mm",SPC,
+Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,"148 x 592 mm, 229 x 1220 mm",,SPC,,,,"592 mm, 1220 mm","148 mm, 229 mm",
 94,Rovere Nuvola,"OMNIA PREMIUM is a high-end SPC flooring collection with usage class 42, available in wide plank and herringbone formats
 
 With a usage class of 42, OMNIA premium floors ensure exceptional durability, perfect for residential, commercial, and industrial environments subject to intense loads
@@ -62,7 +62,7 @@ Thanks to the integrated insulating underlay, impact noise is reduced by up to 2
 
 The matte and textured finish gives the product an authentic look and an extremely natural feel, making the floor a distinctive element in any environment
 
-Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,148X 592 mm | 229 X 1220 mm,"0,55mm | 1,00mm",SPC,
+Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,"148 x 592 mm, 229 x 1220 mm",,SPC,,,,"592 mm, 1220 mm","148 mm, 229 mm",
 95,Rovere Seta,"OMNIA PREMIUM is a high-end SPC flooring collection with usage class 42, available in wide plank and herringbone formats
 
 With a usage class of 42, OMNIA premium floors ensure exceptional durability, perfect for residential, commercial, and industrial environments subject to intense loads
@@ -71,158 +71,158 @@ Thanks to the integrated insulating underlay, impact noise is reduced by up to 2
 
 The matte and textured finish gives the product an authentic look and an extremely natural feel, making the floor a distinctive element in any environment
 
-Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,148X 592 mm | 229 X 1220 mm,"0,55mm | 1,00mm",SPC,
+Numerous decors are available, offering endless possibilities to personalize spaces according to your style",spc,ASPECT LEMN,PLANK & HERRINGBONE,False,,Omnia Floor,,,Podea,"148 x 592 mm, 229 x 1220 mm",,SPC,,,,"592 mm, 1220 mm","148 mm, 229 mm",
 96,Rovere Perla,"OMNIA Standard Plank features elegant formats, matte authentic surfaces, and reliable performance thanks to a stable click system and integrated underlay
 
 The planks in the OMNIA Standard Plank line stand out for their elegant format, which enhances the decor and the matte, authentic vinyl surface, giving the floor an even more natural look. The lacquered 4V groove along the entire perimeter highlights each plank, creating a visual effect that expands the space
 
 Thanks to the practical click system, simple and stable, and usage class 34, this floor is ideal for tackling daily challenges with style and resistance. Additionally, the integrated underlay improves room acoustics and walking comfort
 
-The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,5(4+1) X 228 X 1220 mm,"0,55mm (Rovere Duna, Rovere White) 0,30mm | 1,00mm",SPC,
+The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,228 x 1220 mm,5 mm,SPC,,,,1220 mm,228 mm,
 97,Rovere Sabbia,"OMNIA Standard Plank features elegant formats, matte authentic surfaces, and reliable performance thanks to a stable click system and integrated underlay
 
 The planks in the OMNIA Standard Plank line stand out for their elegant format, which enhances the decor and the matte, authentic vinyl surface, giving the floor an even more natural look. The lacquered 4V groove along the entire perimeter highlights each plank, creating a visual effect that expands the space
 
 Thanks to the practical click system, simple and stable, and usage class 34, this floor is ideal for tackling daily challenges with style and resistance. Additionally, the integrated underlay improves room acoustics and walking comfort
 
-The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,5(4+1) X 228 X 1220 mm,"0,55mm (Rovere Duna, Rovere White) 0,30mm | 1,00mm",SPC,
+The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,228 x 1220 mm,5 mm,SPC,,,,1220 mm,228 mm,
 98,Rovere Miele,"OMNIA Standard Plank features elegant formats, matte authentic surfaces, and reliable performance thanks to a stable click system and integrated underlay
 
 The planks in the OMNIA Standard Plank line stand out for their elegant format, which enhances the decor and the matte, authentic vinyl surface, giving the floor an even more natural look. The lacquered 4V groove along the entire perimeter highlights each plank, creating a visual effect that expands the space
 
 Thanks to the practical click system, simple and stable, and usage class 34, this floor is ideal for tackling daily challenges with style and resistance. Additionally, the integrated underlay improves room acoustics and walking comfort
 
-The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,5(4+1) X 228 X 1220 mm,"0,55mm (Rovere Duna, Rovere White) 0,30mm | 1,00mm",SPC,
+The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,228 x 1220 mm,5 mm,SPC,,,,1220 mm,228 mm,
 99,Rovere White,"OMNIA Standard Plank features elegant formats, matte authentic surfaces, and reliable performance thanks to a stable click system and integrated underlay
 
 The planks in the OMNIA Standard Plank line stand out for their elegant format, which enhances the decor and the matte, authentic vinyl surface, giving the floor an even more natural look. The lacquered 4V groove along the entire perimeter highlights each plank, creating a visual effect that expands the space
 
 Thanks to the practical click system, simple and stable, and usage class 34, this floor is ideal for tackling daily challenges with style and resistance. Additionally, the integrated underlay improves room acoustics and walking comfort
 
-The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,5(4+1) X 228 X 1220 mm,"0,55mm (Rovere Duna, Rovere White) 0,30mm | 1,00mm",SPC,
+The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,228 x 1220 mm,5 mm,SPC,,,,1220 mm,228 mm,
 100,Rovere Duna,"OMNIA Standard Plank features elegant formats, matte authentic surfaces, and reliable performance thanks to a stable click system and integrated underlay
 
 The planks in the OMNIA Standard Plank line stand out for their elegant format, which enhances the decor and the matte, authentic vinyl surface, giving the floor an even more natural look. The lacquered 4V groove along the entire perimeter highlights each plank, creating a visual effect that expands the space
 
 Thanks to the practical click system, simple and stable, and usage class 34, this floor is ideal for tackling daily challenges with style and resistance. Additionally, the integrated underlay improves room acoustics and walking comfort
 
-The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,5(4+1) X 228 X 1220 mm,"0,55mm (Rovere Duna, Rovere White) 0,30mm | 1,00mm",SPC,
+The special plank dimensions give the floor a unique and welcoming elegance. The combination of format, structure, and decor enhances every detail, making it a refined choice for any space",spc,ASPECT LEMN,STANDARD PLANK,False,,Omnia Floor,,,Podea,228 x 1220 mm,5 mm,SPC,,,,1220 mm,228 mm,
 101,Naturale,"JANGAL Straw Floor is an eco-friendly rice straw flooring with Deep Brushed finish and UV technology for natural, sustainable design
 
 JANGAL Straw Floor is an innovative flooring made from rice straw, a natural and renewable resource that combines sustainability with contemporary design
 
 The Deep Brushed structure gives each plank an authentic and tactile texture, while the UV finish ensures resistance and durability over time
 
-Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,11 X 190 X 1200 mm,"1,00mm",SPC,
+Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,190 x 1200 mm,11 mm,SPC,,,,1200 mm,190 mm,
 102,Miele,"JANGAL Straw Floor is an eco-friendly rice straw flooring with Deep Brushed finish and UV technology for natural, sustainable design
 
 JANGAL Straw Floor is an innovative flooring made from rice straw, a natural and renewable resource that combines sustainability with contemporary design
 
 The Deep Brushed structure gives each plank an authentic and tactile texture, while the UV finish ensures resistance and durability over time
 
-Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,11 X 190 X 1200 mm,"1,00mm",SPC,
+Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,190 x 1200 mm,11 mm,SPC,,,,1200 mm,190 mm,
 103,Dorato,"JANGAL Straw Floor is an eco-friendly rice straw flooring with Deep Brushed finish and UV technology for natural, sustainable design
 
 JANGAL Straw Floor is an innovative flooring made from rice straw, a natural and renewable resource that combines sustainability with contemporary design
 
 The Deep Brushed structure gives each plank an authentic and tactile texture, while the UV finish ensures resistance and durability over time
 
-Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,11 X 190 X 1200 mm,"1,00mm",SPC,
+Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,190 x 1200 mm,11 mm,SPC,,,,1200 mm,190 mm,
 104,Spiga,"JANGAL Straw Floor is an eco-friendly rice straw flooring with Deep Brushed finish and UV technology for natural, sustainable design
 
 JANGAL Straw Floor is an innovative flooring made from rice straw, a natural and renewable resource that combines sustainability with contemporary design
 
 The Deep Brushed structure gives each plank an authentic and tactile texture, while the UV finish ensures resistance and durability over time
 
-Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,11 X 190 X 1200 mm,"1,00mm",SPC,
+Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,190 x 1200 mm,11 mm,SPC,,,,1200 mm,190 mm,
 105,Terra,"JANGAL Straw Floor is an eco-friendly rice straw flooring with Deep Brushed finish and UV technology for natural, sustainable design
 
 JANGAL Straw Floor is an innovative flooring made from rice straw, a natural and renewable resource that combines sustainability with contemporary design
 
 The Deep Brushed structure gives each plank an authentic and tactile texture, while the UV finish ensures resistance and durability over time
 
-Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,11 X 190 X 1200 mm,"1,00mm",SPC,
+Available in various wood-inspired decors, JANGAL Straw Floor is the ideal choice for those seeking an ecological floor without sacrificing elegance and practicality",spc,ASPECT LEMN,JANGAL STRAW FLOOR,False,,Omnia Floor,,,Podea,190 x 1200 mm,11 mm,SPC,,,,1200 mm,190 mm,
 106,Concrete Stone,"OMNIA Standard Tiles XL are large-format SPC tiles with stone or marble effect, designed for stability, acoustic comfort, and modern interiors
 
 The Omnia Standard Tile XL collection combines modern design with maximum functionality. The 470x830 mm format enhances spaces with clean, elegant lines, while stone or marble effect surfaces deliver a contemporary and versatile look
 
 Made of SPC with a Rigid Core backing, they ensure high stability, excellent wear resistance, total waterproofing, and superior acoustic comfort thanks to the integrated IXPE underlay
 
-Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,830 x 470 x 5 mm,"0,30 mm",SPC,
+Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,470 x 830 mm,5 mm,SPC,,,,830 mm,470 mm,
 107,Black Onyx,"OMNIA Standard Tiles XL are large-format SPC tiles with stone or marble effect, designed for stability, acoustic comfort, and modern interiors
 
 The Omnia Standard Tile XL collection combines modern design with maximum functionality. The 470x830 mm format enhances spaces with clean, elegant lines, while stone or marble effect surfaces deliver a contemporary and versatile look
 
 Made of SPC with a Rigid Core backing, they ensure high stability, excellent wear resistance, total waterproofing, and superior acoustic comfort thanks to the integrated IXPE underlay
 
-Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,830 x 470 x 5 mm,"0,30 mm",SPC,
+Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,470 x 830 mm,5 mm,SPC,,,,830 mm,470 mm,
 108,Glacier Gray,"OMNIA Standard Tiles XL are large-format SPC tiles with stone or marble effect, designed for stability, acoustic comfort, and modern interiors
 
 The Omnia Standard Tile XL collection combines modern design with maximum functionality. The 470x830 mm format enhances spaces with clean, elegant lines, while stone or marble effect surfaces deliver a contemporary and versatile look
 
 Made of SPC with a Rigid Core backing, they ensure high stability, excellent wear resistance, total waterproofing, and superior acoustic comfort thanks to the integrated IXPE underlay
 
-Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,830 x 470 x 5 mm,"0,30 mm",SPC,
+Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,470 x 830 mm,5 mm,SPC,,,,830 mm,470 mm,
 109,Artic Stone,"OMNIA Standard Tiles XL are large-format SPC tiles with stone or marble effect, designed for stability, acoustic comfort, and modern interiors
 
 The Omnia Standard Tile XL collection combines modern design with maximum functionality. The 470x830 mm format enhances spaces with clean, elegant lines, while stone or marble effect surfaces deliver a contemporary and versatile look
 
 Made of SPC with a Rigid Core backing, they ensure high stability, excellent wear resistance, total waterproofing, and superior acoustic comfort thanks to the integrated IXPE underlay
 
-Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,830 x 470 x 5 mm,"0,30 mm",SPC,
+Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,470 x 830 mm,5 mm,SPC,,,,830 mm,470 mm,
 110,Urban Grey,"OMNIA Standard Tiles XL are large-format SPC tiles with stone or marble effect, designed for stability, acoustic comfort, and modern interiors
 
 The Omnia Standard Tile XL collection combines modern design with maximum functionality. The 470x830 mm format enhances spaces with clean, elegant lines, while stone or marble effect surfaces deliver a contemporary and versatile look
 
 Made of SPC with a Rigid Core backing, they ensure high stability, excellent wear resistance, total waterproofing, and superior acoustic comfort thanks to the integrated IXPE underlay
 
-Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,830 x 470 x 5 mm,"0,30 mm",SPC,
+Safe and healthy, they are phthalate-free, with VOCs and formaldehyde not detected. Ideal for residential and commercial environments, they bring together style, technology, and practicality in a single solution",spc,ASPECT PIATRA,STANDARD TILES,False,,Omnia Floor,,,Podea,470 x 830 mm,5 mm,SPC,,,,830 mm,470 mm,
 111,Urban Stone Grey,"REVESTA offers innovative wall surfaces inspired by natural stone, combining digital technology, sustainability, and timeless elegance
 
 Surfaces inspired by the beauty of matter, shaped by innovation
 
 Behind every tile lies a vision: to craft surfaces that inspire, endure, and respect the environment
 
-REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,8 X 3050 X 1120 mm,,SPC,
+REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,1120 x 3050 mm,8 mm,SPC,,,,3050 mm,1120 mm,
 112,Black Aurum,"REVESTA offers innovative wall surfaces inspired by natural stone, combining digital technology, sustainability, and timeless elegance
 
 Surfaces inspired by the beauty of matter, shaped by innovation
 
 Behind every tile lies a vision: to craft surfaces that inspire, endure, and respect the environment
 
-REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,8 X 3050 X 1120 mm,,SPC,
+REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,1120 x 3050 mm,8 mm,SPC,,,,3050 mm,1120 mm,
 113,White Marble,"REVESTA offers innovative wall surfaces inspired by natural stone, combining digital technology, sustainability, and timeless elegance
 
 Surfaces inspired by the beauty of matter, shaped by innovation
 
 Behind every tile lies a vision: to craft surfaces that inspire, endure, and respect the environment
 
-REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,8 X 3050 X 1120 mm,,SPC,
+REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,1120 x 3050 mm,8 mm,SPC,,,,3050 mm,1120 mm,
 114,Bronze Metal,"REVESTA offers innovative wall surfaces inspired by natural stone, combining digital technology, sustainability, and timeless elegance
 
 Surfaces inspired by the beauty of matter, shaped by innovation
 
 Behind every tile lies a vision: to craft surfaces that inspire, endure, and respect the environment
 
-REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,8 X 3050 X 1120 mm,,SPC,
+REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,1120 x 3050 mm,8 mm,SPC,,,,3050 mm,1120 mm,
 115,Sand Stone Terra Beige,"REVESTA offers innovative wall surfaces inspired by natural stone, combining digital technology, sustainability, and timeless elegance
 
 Surfaces inspired by the beauty of matter, shaped by innovation
 
 Behind every tile lies a vision: to craft surfaces that inspire, endure, and respect the environment
 
-REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,8 X 3050 X 1120 mm,,SPC,
+REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,1120 x 3050 mm,8 mm,SPC,,,,3050 mm,1120 mm,
 116,Absolute Black,"REVESTA offers innovative wall surfaces inspired by natural stone, combining digital technology, sustainability, and timeless elegance
 
 Surfaces inspired by the beauty of matter, shaped by innovation
 
 Behind every tile lies a vision: to craft surfaces that inspire, endure, and respect the environment
 
-REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,8 X 3050 X 1120 mm,,SPC,
+REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,1120 x 3050 mm,8 mm,SPC,,,,3050 mm,1120 mm,
 117,Concrete Grey,"REVESTA offers innovative wall surfaces inspired by natural stone, combining digital technology, sustainability, and timeless elegance
 
 Surfaces inspired by the beauty of matter, shaped by innovation
 
 Behind every tile lies a vision: to craft surfaces that inspire, endure, and respect the environment
 
-REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,8 X 3050 X 1120 mm,,SPC,
+REVESTA combines the warmth of natural stone with the precision of digital technology, creating wall surfaces that are versatile, lightweight, and sustainable. Made to last and designed to elevate every space with timeless elegance",spc,ASPECT PIATRA,REVESTA WALL,False,,Omnia Floor,,,Perete,1120 x 3050 mm,8 mm,SPC,,,,3050 mm,1120 mm,

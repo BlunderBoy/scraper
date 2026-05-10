@@ -1,332 +1,52 @@
-﻿id,title,description,category,type,collection,is_new,subtype,manufacturer,catalog_id,finishes,position,sizes,thickness,material,shape
-1500,Amalfi - Fotoliu,"Con il nuovo modello Amalfi, continuiamo ad esplorare i concetti di leggerezza e funzionalità.
+﻿id,title,description,category,type,collection,is_new,subtype,manufacturer,catalog_id,finishes,position,sizes,thickness,material,shape,cut,diameter,length,width,height
+1500,Amalfi - Fotoliu,"Linee sinuose e volumi aperti dialogano con la luce che filtra attraverso l’intreccio in corda. Il telaio, rigorosamente pensato e sviluppato in alluminio, garantisce robustezza e maneggevolezza .
 
-Linee sinuose e volumi aperti dialogano con la luce che filtra attraverso l’intreccio in corda. Il telaio, rigorosamente pensato e sviluppato in alluminio, garantisce robustezza e maneggevolezza .
+L’intreccio in speciale corda olefin (o polipropilene per la versione Pearl White) assicura le massime performance per l’utilizzo outdoor . Grazie all’elevatissima resistenza agli agenti atmosferici e allo scolorimento generato dai raggi uv, questi materiali rendono il prodotto estremamente pratico poiché quasi del tutto esente da necessità particolari di manutenzione.",mobilier,EXTERIOR,Amalfi,False,FOTOLII,Rosa Splendiani,,,,,,,,,,,,
+1501,Dakota - Fotoliu,"La Poltrona della serie Dakota è realizzata con struttura in teak massiccio e intreccio manuale in corda Olefin/Polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ). Il telaio dello schienale è in alluminio verniciato a polvere epossidica.
 
-L’intreccio in speciale corda olefin (o polipropilene per la versione Pearl White) assicura le massime performance per l’utilizzo outdoor . Grazie all’elevatissima resistenza agli agenti atmosferici e allo scolorimento generato dai raggi uv, questi materiali rendono il prodotto estremamente pratico poiché quasi del tutto esente da necessità particolari di manutenzione.
+The refined and essential line, the very high quality of the materials , the perfect balance between design and tradition, make the armchair Dakota suitable to furnish both indoor and outdoor spaces.",mobilier,EXTERIOR,Dakota,False,FOTOLII,Rosa Splendiani,,,,,,,,,,,,
+1502,Gilda - Fotoliu,"It is characterised by its visible white lacquered aluminium frame and its manual weaving in fabric rope Olefin. The materials it is made of make it perfect for outdoor use .
 
-Le cuscinature di serie, proposte già di base in tessuto olefin ad alta performanza, fanno un ulteriore balzo in avanti a livello qualitativo.
+Thanks to the selection and high quality of the materials used, it has a high resistance to atmospheric agents (UV rays, rain, saltiness): it does not rust and does not discolour .",mobilier,EXTERIOR,Gilda,False,FOTOLII,Rosa Splendiani,,,,,,,,,,,,
+1503,Zante - Fotoliu,"The armchair Zante is made with a solid teak frame with a natural finish. The backrest and seat are hand woven using a special polyrattan rope branded Viro of the highest quality (available as standard in Off White finish ) .
 
-La poltrona della serie Amalfi è realizzato con struttura in alluminio e intreccio manuale in speciale corda olefin/polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ).
+Thanks to the selection of materials and their quality, this outdoor relaxation armchair is able to withstand the elements , requiring very little maintenance.",mobilier,EXTERIOR,Zante,False,FOTOLII,Rosa Splendiani,,,,,,,,,,,,
+1504,Amalfi - Canapea,"Linee sinuose e volumi aperti dialogano con la luce che filtra attraverso l’intreccio in corda. Il telaio, rigorosamente pensato e sviluppato in alluminio, garantisce robustezza e maneggevolezza .
 
-La linea raffinata ed essenziale , l’altissima qualità dei materiali , l’equilibrio perfetto tra design e tradizione, rendono la poltrona Amalfi adatto ad arredare sia spazi interni che esterni .
+L’intreccio in speciale corda olefin (o polipropilene per la versione Pearl White) assicura le massime performance per l’utilizzo outdoor . Grazie all’elevatissima resistenza agli agenti atmosferici e allo scolorimento generato dai raggi uv, questi materiali rendono il prodotto estremamente pratico poiché quasi del tutto esente da necessità particolari di manutenzione.",mobilier,EXTERIOR,Amalfi,False,CANAPELE,Rosa Splendiani,,,,,,,,,,,,
+1505,Dakota - Canapea,"Il Divano della serie Dakota è realizzato con struttura in teak massiccio e intreccio manuale in speciale corda olefin/polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ). Il telaio dello schienale è in alluminio verniciato a polvere epossidica.
 
-Like the other outdoor products by Rosa Splendiani , this armchair is not affected by the weather and temperature changes thanks to the certification of the woven fibre.
+The refined and essential line, the very high quality of the materials , the perfect balance between design and tradition, make the sofa Dakota suitable to furnish both indoor and outdoor spaces.",mobilier,EXTERIOR,Dakota,False,CANAPELE,Rosa Splendiani,,,,,,,,,,,,
+1506,Gilda - Canapea,"It is characterized by the visible structure in white lacquered aluminium and by the manual weaving in fabri Olefinc rope . The materials with which it is made make it perfect for outdoor use.
 
-I cuscini standard sono in tessuto olefin per esterno, colore “off white”. Possibilità di personalizzare i tessuti
+Thanks to the selection and high quality of the materials used, it has a high resistance to atmospheric agents (UV rays, rain, saltiness): it does not rust and does not discolour .",mobilier,EXTERIOR,Gilda,False,CANAPELE,Rosa Splendiani,,,,,,,,,,,,
+1507,BAHIA - Canapea modulară,"Il sistema modulare Bahia si compone di tre differenti elementi seduta in teak a doga larga, con piede tornito. Tutti sono dotati di base di cuscino seduta .
 
-Codice Articolo : 60-191 DM/PW
+Ci sono poi un elemento schienale in alluminio verniciato a polvere e intrecciato in corda (olefon / polipropilene) a sezione tonda e un set di cuscini schienale e cuscini ornamentali .",mobilier,EXTERIOR,BAHIA,False,CANAPELE,Rosa Splendiani,,,,,,,,,,,,
+1508,Tosca - Canapea modulară,"It is possible to set up the most suitable composition for different space and furnishing requirements . There are six modular elements : a single module, a classic corner module, a large corner module, a double module and a pouff module. In addition, there are pouff-stools in various diameters and heights.
 
-Misure: Larghezza: 80 cm; Profondità: 68 cm; Altezza Schienale: 90 cm; Altezza seduta: 42 cm
+The structure is made of QuickDry technology draining rubber (breathable, prevents the formation of mould and microbes) and MultiTech marine multilayer , of certified quality.",mobilier,EXTERIOR,Tosca,False,CANAPELE,Rosa Splendiani,,,,,,,,,,,,
+1509,Amalfi - Scaun,"It is possible to set up the most suitable composition for different space and furnishing requirements . There are six modular elements : a single module, a classic corner module, a large corner module, a double module and a pouff module. In addition, there are pouff-stools in various diameters and heights.
 
-La linea “Amalfi” nasce nel ROSA CREATIVE LAB .
+The structure is made of QuickDry technology draining rubber (breathable, prevents the formation of mould and microbes) and MultiTech marine multilayer , of certified quality.",mobilier,EXTERIOR,Amalfi,False,SCAUNE,Rosa Splendiani,,,,,,,,,,,,
+1510,Dakota - Scaun,"La Poltroncina da pranzo della serie Dakota è realizzata con struttura in teak massiccio e intreccio manuale in speciale corda Olefin/Polipropilene (nelle finiture Pearl White e Desert Mix ) oppure in polyrattan di altissima qualità (nella finitura Java Brown ). Il telaio dello schienale è in alluminio verniciato a polvere epossidica.
 
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.",mobilier,EXTERIOR,Amalfi,False,FOTOLII,Rosa Splendiani,,"Desert Mix, Pearl White",,,,Aluminium / Olefin rope,
-1501,Dakota - Fotoliu,"The collection Dakota by Rosa Splendiani represents the perfect combination of tradition and innovation, nature and technique.
+The refined and essential line, the very high quality of the materials , the perfect balance between design and tradition, make the small armchair Dakota suitable to furnish both indoor and outdoor spaces.",mobilier,EXTERIOR,Dakota,False,SCAUNE,Rosa Splendiani,,,,,,,,,,,,
+1511,Gilda - Scaun,"It is characterized by the visible structure in white lacquered aluminium and by the manual weaving in fabri Olefinc rope . The materials it is made of make it perfect for outdoor use.
 
-La Poltrona della serie Dakota è realizzata con struttura in teak massiccio e intreccio manuale in corda Olefin/Polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ). Il telaio dello schienale è in alluminio verniciato a polvere epossidica.
+Thanks to the selection and high quality of the materials used, it has a high resistance to atmospheric agents (UV rays, rain, saltiness): it does not rust and does not discolour .",mobilier,EXTERIOR,Gilda,False,SCAUNE,Rosa Splendiani,,,,,,,,,,,,
+1512,Lidia - Scaun,"Il telaio, pensato e sviluppato in alluminio, garantisce robustezza e maneggevolezza .
 
-The refined and essential line, the very high quality of the materials , the perfect balance between design and tradition, make the armchair Dakota suitable to furnish both indoor and outdoor spaces.
+La seduta e lo schienale sono realizzati in corda di poliestere , con un trattamento apposito del filato che offre caratteristiche di resistenza e comfort allo stesso tempo, oltre che praticità di manutenzione e pulizia. Ciò assicura elevate performance per l’utilizzo outdoor .",mobilier,EXTERIOR,Lidia,False,SCAUNE,Rosa Splendiani,,,,,,,,,,,,
+1513,Juniper - Masă extensibilă,"The structure and top is handcrafted using real solid teak with a completely natural brushed finish .
 
-Like the other products outdoor signed Rosa Splendiani , this sofa is not afraid of weather and temperature changes thanks to the certification of the interwoven fiber.
+The extensible dining table Juniper is perfect to be placed in sheltered outdoor spaces, and can comfortably accommodate up to 12 diners, giving space and life to moments of sociability and conviviality.",mobilier,EXTERIOR,Juniper,False,MESE,Rosa Splendiani,,,,,,,,,,,,
+1514,Dakota - Șezlong,"Il lettino della serie Dakota è realizzato con struttura in teak massiccio e intreccio manuale in corda Olefin/Polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ) con tessitura incrociata. Il controtelaio interno è in alluminio verniciato a polvere epossidica.
 
-I cuscini standard sono in colore tortora (wheat). Possibilità di personalizzare i tessuti
+La linea raffinata ed essenziale , l’altissima qualità dei materiali , l’equilibrio perfetto tra design e tradizione, rendono il lettino prendisole Dakota adatto ad arredare sia spazi interni che esterni .",mobilier,EXTERIOR,Dakota,False,Șezlonguri,Rosa Splendiani,,,,,,,,,,,,
+1515,Melvin - Șezlong,"The Melvin lounger is made entirely of natural , untreated solid teak wood from sustainable forests and certified legal sources .
 
-Codice Articolo : 60-201 DM/PW
+Teak is the outdoor wood par excellence , it does not fear the passage of time and the changing of seasons, because thanks to its intrinsic characteristics of hardness, oiliness and resilience , it remains structurally stable and therefore has an extraordinary longevity .",mobilier,EXTERIOR,Melvin,False,Șezlonguri,Rosa Splendiani,,,,,,,,,,,,
+1516,Dakota - masuță,"The Dakota series coffee table is made of solid teak in a natural finish.
 
-Measurements: Width: 78 cm; Depth: 80 cm; Back Height: 68 cm; Seat Height: 45 cm
-
-The line ""Dakota"" was born in the ROSA CREATIVE ROOM .
-
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.
-
-Other items in the collection Dakota",mobilier,EXTERIOR,Dakota,False,FOTOLII,Rosa Splendiani,,"Desert Mix, Pearl White",,,,Aluminium / Olefin rope,
-1502,Gilda - Fotoliu,"The series armchair Gilda has a minimalist and modern design.
-
-It is characterised by its visible white lacquered aluminium frame and its manual weaving in fabric rope Olefin. The materials it is made of make it perfect for outdoor use .
-
-Thanks to the selection and high quality of the materials used, it has a high resistance to atmospheric agents (UV rays, rain, saltiness): it does not rust and does not discolour .
-
-In addition, its structure has a low weight (about 8 kg excluding cushions) which allows for maximum manoeuvrability . At the same time, the armchair Gilda is characterised by its excellent robustness .
-
-Standard cushions are in ""white"" colour with contrasting border in ""rope"" colour. Possibility to customize the fabrics
-
-Measurements: Width: 85 cm; Depth: 82 cm; Back Height: 76 cm; Seat Height: 45 cm
-
-The Collection Gilda was conceived, designed and conceived by "" Rosa Creative Room “ our in-house design, research and development studio.
-
-Thanks to the collaboration between our internal team and several freelance designers , in fact, at the Rosa Splendiani we can always count on innovative ideas , in step with the latest trends in the furniture sector, without ever losing the traditional characteristics that distinguish the brand.
-
-Other items in the collection Gilda",mobilier,EXTERIOR,Gilda,False,FOTOLII,Rosa Splendiani,,Sunproof Sand,,,,Aluminium / Olefin rope,
-1503,Zante - Fotoliu,"The relax armchair Zante by Rosa Splendiani is an outdoor seat of great aesthetic impact and unique functionality .
-
-The armchair Zante is made with a solid teak frame with a natural finish. The backrest and seat are hand woven using a special polyrattan rope branded Viro of the highest quality (available as standard in Off White finish ) .
-
-Thanks to the selection of materials and their quality, this outdoor relaxation armchair is able to withstand the elements , requiring very little maintenance.
-
-Width: 60 cm; Length: 80 cm; Height: 75 cm",mobilier,EXTERIOR,Zante,False,FOTOLII,Rosa Splendiani,,"Rope - Off White, Rope - Cappuccino",,,,Aluminium / Olefin rope,
-1504,Amalfi - Canapea,"Con il nuovo modello Amalfi, continuiamo ad esplorare i concetti di leggerezza e funzionalità.
-
-Linee sinuose e volumi aperti dialogano con la luce che filtra attraverso l’intreccio in corda. Il telaio, rigorosamente pensato e sviluppato in alluminio, garantisce robustezza e maneggevolezza .
-
-L’intreccio in speciale corda olefin (o polipropilene per la versione Pearl White) assicura le massime performance per l’utilizzo outdoor . Grazie all’elevatissima resistenza agli agenti atmosferici e allo scolorimento generato dai raggi uv, questi materiali rendono il prodotto estremamente pratico poiché quasi del tutto esente da necessità particolari di manutenzione.
-
-Le cuscinature di serie, proposte già di base in tessuto olefin ad alta performanza, fanno un ulteriore balzo in avanti a livello qualitativo.
-
-Il Divano della serie Amalfi è realizzato con struttura in alluminio e intreccio manuale in speciale corda olefin/polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ).
-
-La linea raffinata ed essenziale , l’altissima qualità dei materiali , l’equilibrio perfetto tra design e tradizione, rendono il divano Amalfi adatto ad arredare sia spazi interni che esterni .
-
-Like the other products outdoor signed Rosa Splendiani , this sofa is not afraid of weather and temperature changes thanks to the certification of the interwoven fiber.
-
-I cuscini standard sono in tessuto olefin per esterno, colore “off white”. Possibilità di personalizzare i tessuti
-
-Codice Articolo : 60-192 DM/PW
-
-Misure: Larghezza: 158 cm; Profondità: 68 cm; Altezza Schienale: 90 cm; Altezza seduta: 42 cm
-
-La linea “Amalfi” nasce nel ROSA CREATIVE LAB .
-
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.",mobilier,EXTERIOR,Amalfi,False,CANAPELE,Rosa Splendiani,,"Desert Mix, Pearl White",,,,Aluminium / Olefin rope,
-1505,Dakota - Canapea,"The collection Dakota by Rosa Splendiani represents the perfect combination of tradition and innovation, nature and technique.
-
-Il Divano della serie Dakota è realizzato con struttura in teak massiccio e intreccio manuale in speciale corda olefin/polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ). Il telaio dello schienale è in alluminio verniciato a polvere epossidica.
-
-The refined and essential line, the very high quality of the materials , the perfect balance between design and tradition, make the sofa Dakota suitable to furnish both indoor and outdoor spaces.
-
-Like the other products outdoor signed Rosa Splendiani , this sofa is not afraid of weather and temperature changes thanks to the certification of the interwoven fiber.
-
-I cuscini standard sono in tessuto poliestere per esterno, colore tortora (“wheat”) con bordino a contrasto “cioccolato”. Possibilità di personalizzare i tessuti
-
-Codice Articolo : 60-203 DM/PW
-
-Measurements: Width: 178 cm; Depth: 80 cm; Back Height: 68 cm; Seat Height: 45 cm
-
-The line ""Dakota"" was born in ROSA CREATIVE LAB .
-
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.
-
-Other items in the collection Dakota",mobilier,EXTERIOR,Dakota,False,CANAPELE,Rosa Splendiani,,"Desert Mix, Pearl White",,,,Aluminium / Olefin rope,
-1506,Gilda - Canapea,"The three-seater sofa from the series Gilda has minimalist and modern design.
-
-It is characterized by the visible structure in white lacquered aluminium and by the manual weaving in fabri Olefinc rope . The materials with which it is made make it perfect for outdoor use.
-
-Thanks to the selection and high quality of the materials used, it has a high resistance to atmospheric agents (UV rays, rain, saltiness): it does not rust and does not discolour .
-
-The structure of the sofa Gilda has a reduced weight (approximately 12 kg excluding the cushions) which allows for maximum manoeuvrability . At the same time, this outdoor sofa is characterised by excellent sturdiness and solidity .
-
-Standard cushions are in ""white"" colour with contrasting border in ""rope"" colour. Possibility to customize the fabrics
-
-Measurements: Width: 200 cm; Depth: 82 cm; Back Height: 76 cm; Seat Height: 45 cm
-
-The Collection Gilda was conceived, designed and conceived by the Rosa Creative Room our in-house design, research and development studio.
-
-Thanks to the collaboration between our internal team and several freelance designers , in fact, at Rosa Splendiani we can always count on innovative ideas , in step with the most current trends in the furniture sector, without ever losing the traditional characteristics that distinguish the brand.
-
-Other items in the collection Gilda",mobilier,EXTERIOR,Gilda,False,CANAPELE,Rosa Splendiani,,Sunproof Sand,,,,Aluminium / Olefin rope,
-1507,BAHIA - Canapea modulară,"Il divano modulare BAHIA di Rosa Splendiani porta all’estremo il concetto di modularità per la zona lounge, sia in spazi outdoor che interiors.
-
-Il sistema modulare Bahia si compone di tre differenti elementi seduta in teak a doga larga, con piede tornito. Tutti sono dotati di base di cuscino seduta .
-
-Ci sono poi un elemento schienale in alluminio verniciato a polvere e intrecciato in corda (olefon / polipropilene) a sezione tonda e un set di cuscini schienale e cuscini ornamentali .
-
-Dalla combinazione di questi semplici elementi, si può arrivare a creare qualsiasi tipo di composizione lounge . Il concept del Bahia, si spinge molto oltre quello di divano componibile o angolare, abbattendo i limiti dei classici sistemi modulari.
-
-Grazie al sistema tecnico adottato, infatti, si possono generare un numero infinito e inaspettato di soluzioni per ogni esigenza spaziale e funzionale .
-
-Thanks to its particular structure and aesthetics, it does not need to be placed close to a wall, because it is beautiful to see even from behind.
-
-E’ dotato, di serie, di una cuscinatura apposita in tessuto outdoor color “light grey” 100% Olefin con fondo in poliestere. E’ sempre possibile personalizzare i tessuti
-
-60-301 Modulo Singolo 90×90 (misure 90 x 90 x 40 h)
-
-60-303 Modulo Esagonale angolare (misure 200 x 126 x 40h)
-
-60-302 Modulo Doppio 180×90 (misure 180 x 90 x 40 h)
-
-60-304CU Set Cuscini schienale e ornamentali
-
-60-30 DM/GY Schienale in alluminio intrecciato in corda
-
-FINITURE DISPONIBILI PER LO SCHIENALE
-
-Elementi della collezione BAHIA
-
-Il sistema lounge modulare “BAHIA” nasce dalle idee dal lavoro della ROSA CREATIVE ROOM
-
-In its in-house studio , the team Rosa Splendiani collaborates with designers , architects , interior decorators and other professionals in the sector.
-
-This is how the best ideas are born for the development of innovative projects and products , in step with the latest trends in the world of furniture outdoor and interior design .",mobilier,EXTERIOR,BAHIA,False,CANAPELE,Rosa Splendiani,,"Desert Mix / GREY, MODUL SIMPLU 90x90, Modul de colț 180×90, Modul dublu 180x90, Set spătar și perne decorative, Spătar din aluminiu împletit cu frânghie",,,,Aluminium / Olefin rope,
-1508,Tosca - Canapea modulară,"The modular outdoor sofa ""Tosca"" by Rosa Splendiani , embodies the evolution of modularity for furniture outdoor.
-
-It is possible to set up the most suitable composition for different space and furnishing requirements . There are six modular elements : a single module, a classic corner module, a large corner module, a double module and a pouff module. In addition, there are pouff-stools in various diameters and heights.
-
-The structure is made of QuickDry technology draining rubber (breathable, prevents the formation of mould and microbes) and MultiTech marine multilayer , of certified quality.
-
-The upholstery of the sofa Tosca is made of a special fabric for outdoor use with very high standards of light resistance (prevents the sun's rays from discolouring the fabric over time). Naturally, the fabrics used are water-repellent and water-resistant. They also have a high resistance to abrasion, rubbing and staining.
-
-The outdoor sofa Tosca is characterised by its minimalist design and straight lines, as well as by the infinite possibilities for customising the fabrics.
-
-You can customise the fabrics as you wish, choosing from our fabric folders.
-
-Elements of the collection Tosca :
-
-MATERIALS/COMPOSITION : Structure: Certified marine plywood + Elastic straps Padding: QuickDry Technology draining rubber + Dacron Feet: Aluminium Upholstery: Water-repellent, photoresistant, stain-resistant Dralon/Acrylic/PVC fabrics
-
-Elements of the collection Tosca
-
-Tosca Round pouff diam.50 h 55
-
-The ""Tosca"" collection was born from the ideas of the ROSA CREATIVE ROOM
-
-In its in-house studio , the team Rosa Splendiani collaborates with designers , architects , interior decorators and other professionals in the sector.
-
-This is how the best ideas are born for the development of innovative projects and products , in step with the latest trends in the world of furniture outdoor and interior design .",mobilier,EXTERIOR,Tosca,False,CANAPELE,Rosa Splendiani,,"MODUL SIMPLU 70 x 90, Modul de colț 90 x 90, Modul dublu 140 x 90, Modul de colț mare 115 x 115, Modul puf 70 x 90, modul puf rotund 80, modul puf rotund 50",,,,Aluminium / Olefin rope,
-1509,Amalfi - Scaun,"The modular outdoor sofa ""Tosca"" by Rosa Splendiani , embodies the evolution of modularity for furniture outdoor.
-
-It is possible to set up the most suitable composition for different space and furnishing requirements . There are six modular elements : a single module, a classic corner module, a large corner module, a double module and a pouff module. In addition, there are pouff-stools in various diameters and heights.
-
-The structure is made of QuickDry technology draining rubber (breathable, prevents the formation of mould and microbes) and MultiTech marine multilayer , of certified quality.
-
-The upholstery of the sofa Tosca is made of a special fabric for outdoor use with very high standards of light resistance (prevents the sun's rays from discolouring the fabric over time). Naturally, the fabrics used are water-repellent and water-resistant. They also have a high resistance to abrasion, rubbing and staining.
-
-The outdoor sofa Tosca is characterised by its minimalist design and straight lines, as well as by the infinite possibilities for customising the fabrics.
-
-You can customise the fabrics as you wish, choosing from our fabric folders.
-
-Elements of the collection Tosca :
-
-MATERIALS/COMPOSITION : Structure: Certified marine plywood + Elastic straps Padding: QuickDry Technology draining rubber + Dacron Feet: Aluminium Upholstery: Water-repellent, photoresistant, stain-resistant Dralon/Acrylic/PVC fabrics
-
-Elements of the collection Tosca
-
-Tosca Round pouff diam.50 h 55
-
-The ""Tosca"" collection was born from the ideas of the ROSA CREATIVE ROOM
-
-In its in-house studio , the team Rosa Splendiani collaborates with designers , architects , interior decorators and other professionals in the sector.
-
-This is how the best ideas are born for the development of innovative projects and products , in step with the latest trends in the world of furniture outdoor and interior design .",mobilier,EXTERIOR,Amalfi,False,SCAUNE,Rosa Splendiani,,"Desert Mix, Pearl White",,,,Aluminium / Olefin rope,
-1510,Dakota - Scaun,"The collection Dakota by Rosa Splendiani represents the perfect combination of tradition and innovation, nature and technique.
-
-La Poltroncina da pranzo della serie Dakota è realizzata con struttura in teak massiccio e intreccio manuale in speciale corda Olefin/Polipropilene (nelle finiture Pearl White e Desert Mix ) oppure in polyrattan di altissima qualità (nella finitura Java Brown ). Il telaio dello schienale è in alluminio verniciato a polvere epossidica.
-
-The refined and essential line, the very high quality of the materials , the perfect balance between design and tradition, make the small armchair Dakota suitable to furnish both indoor and outdoor spaces.
-
-Like the other products outdoor signed Rosa Splendiani , this armchair is not afraid of bad weather and temperature changes thanks to the certification of the woven fibre.
-
-The standard seat cushion is in ""rope"" colour with contrasting ""chocolate"" edging. Possibility of customize fabrics
-
-Codice Articolo : 60-205 DM/PW/JB
-
-Measurements: Width: 60 cm; Depth: 60 cm; Back Height: 77 cm; Seat Height: 47 cm
-
-The line ""Dakota"" was born in the ROSA CREATIVE ROOM .
-
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.
-
-Other items in the collection Dakota",mobilier,EXTERIOR,Dakota,False,SCAUNE,Rosa Splendiani,,"Desert Mix, Pearl White, Java Brown",,,,Aluminium / Olefin rope,
-1511,Gilda - Scaun,"The dining chair Gilda has a minimalist and modern design.
-
-It is characterized by the visible structure in white lacquered aluminium and by the manual weaving in fabri Olefinc rope . The materials it is made of make it perfect for outdoor use.
-
-Thanks to the selection and high quality of the materials used, it has a high resistance to atmospheric agents (UV rays, rain, saltiness): it does not rust and does not discolour .
-
-In addition, it has a very low weight (about 3 kg) that allows maximum handling and at the same time is characterized by excellent robustness . The Gilda chair can be stacked up to 6 high without any problems.
-
-Measurements: Width: 52 cm; Depth: 59 cm; Back Height: 81 cm; Seat Height: 47 cm
-
-The Collection Gilda was conceived, designed and conceived by the Rosa Creative Room our in-house design, research and development studio.
-
-Thanks to the collaboration between our internal team and several freelance designers , in fact, at Rosa Splendiani we can always count on innovative ideas , in step with the most current trends in the furniture sector, without ever losing the traditional characteristics that distinguish the brand.
-
-Other items in the collection Gilda
-
-Alternative or combinable products",mobilier,EXTERIOR,Gilda,False,SCAUNE,Rosa Splendiani,,Sunproof Sand,,,,Aluminium / Olefin rope,
-1512,Lidia - Scaun,"La sedia Lidia, nata dall’idea della “Rosa Creative Room”, coniuga stile unico, praticità di utilizzo e resistenza agli genti atmosferici.
-
-Il telaio, pensato e sviluppato in alluminio, garantisce robustezza e maneggevolezza .
-
-La seduta e lo schienale sono realizzati in corda di poliestere , con un trattamento apposito del filato che offre caratteristiche di resistenza e comfort allo stesso tempo, oltre che praticità di manutenzione e pulizia. Ciò assicura elevate performance per l’utilizzo outdoor .
-
-La linea raffinata ed essenziale , la qualità dei materiali , rendono la sedia Lidia adatta ad arredare sia spazi residenziali che contract .
-
-Come gli altri prodotti outdoor firmati Rosa Splendiani, questa sedia non teme intemperie e sbalzi termici.
-
-Il cuscino seduta è incluso, in colore standard “dirty white”.
-
-Misure: Larghezza: 62 cm; Profondità: 57 cm; Altezza Schienale: 84 cm; Altezza seduta: 46 cm
-
-Alluminio “Avorio” + Corda “Terra”
-
-La sedia Lidia nasce nel ROSA CREATIVE LAB .
-
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.",mobilier,EXTERIOR,Lidia,False,SCAUNE,Rosa Splendiani,,,,,,Aluminium / Olefin rope,
-1513,Juniper - Masă extensibilă,"The new extensible table Juniper in teak, signed Rosa Splendiani represents the maximum meeting point between functionality, aesthetics and design.
-
-The structure and top is handcrafted using real solid teak with a completely natural brushed finish .
-
-The extensible dining table Juniper is perfect to be placed in sheltered outdoor spaces, and can comfortably accommodate up to 12 diners, giving space and life to moments of sociability and conviviality.
-
-The high quality of the materials, the essentiality of the lines and the craftsmanship of the workmanship make it an essential piece for outdoor and indoor furniture .
-
-Measurements cm : Length 210/270 , Width 100 , Height 76
-
-Measurements: Length: 210/270 cm; Width: 100 cm; Height: 76 cm
-
-The "" Juniper "" was born from the idea and the study of ROSA CREATIVE ROOM .
-
-In its in-house design office , the team constantly works with designers Rosa Splendiani collaborates constantly with designers , architects , interior decorators and other professionals in the sector.
-
-This is how the best ideas are born for the development of innovative projects and products , in step with the latest trends in the world of furniture outdoor and interior design .",mobilier,EXTERIOR,Juniper,False,MESE,Rosa Splendiani,,Natural Teak,,,,Aluminium / Olefin rope,
-1514,Dakota - Șezlong,"The collection Dakota by Rosa Splendiani represents the perfect combination of tradition and innovation, nature and technique.
-
-Il lettino della serie Dakota è realizzato con struttura in teak massiccio e intreccio manuale in corda Olefin/Polipropilene di alta qualità (disponibile di serie in due finiture: Pearl White e Desert Mix ) con tessitura incrociata. Il controtelaio interno è in alluminio verniciato a polvere epossidica.
-
-La linea raffinata ed essenziale , l’altissima qualità dei materiali , l’equilibrio perfetto tra design e tradizione, rendono il lettino prendisole Dakota adatto ad arredare sia spazi interni che esterni .
-
-Come gli altri prodotti outdoor firmati Rosa Splendiani, questo lettino non teme intemperie e sbalzi termici grazie alla certificazione della fibra di intreccio e all’alta qualità generale dei materiali utilizzati.
-
-I cuscini standard sono in colore tortora (wheat). Possibilità di personalizzare i tessuti
-
-Codice Articolo : 60-206 DM/PW
-
-Misure: Larghezza: 72 cm; Profondità: 195 cm; Altezza seduta: 36 cm
-
-The line ""Dakota"" was born in the ROSA CREATIVE ROOM .
-
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.
-
-Other items in the collection Dakota",mobilier,EXTERIOR,Dakota,False,Șezlonguri,Rosa Splendiani,,"Desert Mix, Pearl White",,,,Aluminium / Olefin rope,
-1515,Melvin - Șezlong,"The small bed Melvin by Rosa Splendiani is characterized by a slightly shaped profile at ""onda"" and essential aesthetics combined with absolute functionality.
-
-The Melvin lounger is made entirely of natural , untreated solid teak wood from sustainable forests and certified legal sources .
-
-Teak is the outdoor wood par excellence , it does not fear the passage of time and the changing of seasons, because thanks to its intrinsic characteristics of hardness, oiliness and resilience , it remains structurally stable and therefore has an extraordinary longevity .
-
-To learn about this and other materials used by us at Rosa Splendiani , visit our dedicated section .
-
-It is equipped with discreet and comfortable wheels that make it easy to move around and guarantee excellent manoeuvrability. In addition, it has a backrest that can be reclined in different positions to adapt the inclination to different comfort needs .
-
-The whole cushion (optional) is made of outdoor fabric in ""white"" colour. Possibility of customize fabrics
-
-Measurements: Width: 200 cm; Depth: 65 cm; Height: 35 cm
-
-This product was born from the ideas of the ROSA CREATIVE ROOM
-
-In its in-house studio , the team Rosa Splendiani collaborates with designers , architects , interior decorators and other professionals in the sector.
-
-This is how the best ideas are born for the development of innovative projects and products , in step with the latest trends in the world of furniture outdoor and interior design .",mobilier,EXTERIOR,Melvin,False,Șezlonguri,Rosa Splendiani,,Natural Teak,,,,Aluminium / Olefin rope,
-1516,Dakota - masuță,"The collection Dakota by Rosa Splendiani represents the perfect combination of tradition and innovation, nature and technique.
-
-The Dakota series coffee table is made of solid teak in a natural finish.
-
-The refined and essential line, the high quality of the materials , the perfect balance between design and tradition, make the coffee table Dakota suitable to furnish both indoor and outdoor spaces.
-
-Measurements: Width: 60 cm; Depth: 100 cm; Height: 32 cm
-
-The line ""Dakota"" was born in ROSA CREATIVE LAB .
-
-In its in-house studio, in fact, the team Rosa Splendiani in collaboration with free lance designers, elaborates ideas and carries out continuous research on materials. In this way, products and concepts always in step with the trends of the moment come to life.
-
-Other items in the collection Dakota",mobilier,EXTERIOR,Dakota,False,Masuțe de cafea,Rosa Splendiani,,Natural Teak,,,,Aluminium / Olefin rope,
+The refined and essential line, the high quality of the materials , the perfect balance between design and tradition, make the coffee table Dakota suitable to furnish both indoor and outdoor spaces.",mobilier,EXTERIOR,Dakota,False,Masuțe de cafea,Rosa Splendiani,,,,,,,,,,,,

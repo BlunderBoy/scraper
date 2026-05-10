@@ -34,6 +34,7 @@ from scraper_brand_utils import (
     aggregate_unique_column,
     clean_cell,
     created_stamp_now,
+    default_color,
     norm_key,
     total_gallery_count,
     variant_sku,
@@ -270,7 +271,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             gurls = []
 
         sku = variant_sku(SKU_PREFIX, v_id, clean_cell(row.get("COD REFERINTA")))
-        col = fondovalle_variant_color(row)
+        col = default_color(fondovalle_variant_color(row))
 
         variants_db.append(
             {

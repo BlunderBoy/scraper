@@ -17,10 +17,16 @@ Prerequisites
 Usage (after `.env` is filled)
 -----
   python upload_cloudflare.py --dry-run
-  python upload_cloudflare.py --truncate-d1
-  python upload_cloudflare.py --id-offset 1000   # default; avoids id clashes with existing DB rows
+  python upload_cloudflare.py --truncate-d1               # wipes all rows from the 4 tables before insert
+  python upload_cloudflare.py --truncate-d1 --id-offset 0 # full clean reload (no id shift)
+  python upload_cloudflare.py --id-offset 1000            # default; appends, shifts ids to avoid clashes
 
 Defaults read merged_*.csv from this directory.
+
+Note on ``--truncate-d1``:
+  Deletes every row from ``product_pdfs``, ``variants``, ``products``, ``technical_pdfs``
+  in foreign-key-safe order (table definitions are kept). Combine with ``--id-offset 0``
+  for a clean reload that preserves the merged ids straight from the CSV.
 """
 
 from __future__ import annotations
@@ -320,8 +326,25 @@ def align_columns(csv_headers: list[str], db_col_info: list[tuple[str, str, int]
 
 
 def truncate_tables(account_id: str, database_id: str, token: str, tables: list[str]) -> None:
+    """``DELETE FROM`` each table in the order given (FK-safe).
+
+    Prints a per-table line with the row count just deleted (best-effort).
+    """
     for t in tables:
+        if not t.replace("_", "").isalnum():
+            raise SystemExit(f"Unsafe table name: {t}")
+        try:
+            before = d1_query(
+                account_id, database_id, token, f'SELECT COUNT(*) AS c FROM "{t}"'
+            )
+            count_rows = _extract_result_rows(before)
+            before_n: int | str = (
+                count_rows[0].get("c") if count_rows else "?"
+            ) if count_rows else "?"
+        except SystemExit:
+            before_n = "?"
         d1_query(account_id, database_id, token, f'DELETE FROM "{t}"')
+        print(f"  cleared {t} ({before_n} row(s))", flush=True)
 
 
 def main() -> int:
@@ -332,7 +355,18 @@ def main() -> int:
         help="Do not call Cloudflare APIs; print CSV row counts only",
     )
     parser.add_argument("--skip-d1", action="store_true")
-    parser.add_argument("--truncate-d1", action="store_true", help="DELETE FROM variants, products first")
+    parser.add_argument(
+        "--truncate-d1",
+        "--reset-d1",
+        "--clear-d1",
+        dest="truncate_d1",
+        action="store_true",
+        help=(
+            "Wipe ALL rows from D1 tables before inserting (DELETE FROM in FK-safe order: "
+            "product_pdfs -> variants -> products -> technical_pdfs). Tables themselves are "
+            "kept; pair with --id-offset 0 for a clean reload preserving merged ids."
+        ),
+    )
     parser.add_argument(
         "--id-offset",
         type=int,
@@ -373,9 +407,17 @@ def main() -> int:
                 print(f"    CSV→DB column names: {', '.join(alias_notes)}")
 
         if args.dry_run:
-            pass
+            if args.truncate_d1:
+                print(
+                    "  (--truncate-d1 set; would DELETE FROM "
+                    + ", ".join(TRUNCATE_TABLE_ORDER)
+                    + " before insert)"
+                )
         elif args.truncate_d1:
-            print("Truncating D1 tables (FK-safe order)...")
+            print(
+                "Wiping D1 tables before reload (FK-safe order): "
+                + " -> ".join(TRUNCATE_TABLE_ORDER)
+            )
             truncate_tables(acct, db_id, token, TRUNCATE_TABLE_ORDER)
 
         if not args.dry_run:

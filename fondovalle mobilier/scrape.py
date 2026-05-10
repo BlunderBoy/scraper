@@ -34,7 +34,9 @@ from scraper_brand_utils import (
     aggregate_unique_column,
     clean_cell,
     created_stamp_now,
+    default_color,
     norm_key,
+    normalize_category,
     total_gallery_count,
     variant_sku,
     write_brand_outputs,
@@ -203,6 +205,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             description_csv=None,
             collection_soup=soup_c,
         )
+        row_dict["category"] = normalize_category(categorie)
         row_dict["id"] = p_id
         products_db.append(row_dict)
         product_key_to_id[k] = p_id
@@ -257,7 +260,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             gurls = []
 
         sku = variant_sku(SKU_PREFIX, v_id, clean_cell(row.get("COD REFERINTA")))
-        col = fondovalle_variant_color(row)
+        col = default_color(fondovalle_variant_color(row))
 
         variants_db.append(
             {

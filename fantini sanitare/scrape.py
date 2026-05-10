@@ -319,6 +319,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             "thickness": "",
             "material": "Brass",
             "shape": "",
+            "cut": "",
             "diameter": dims.get("diameter", ""),
             "length": dims.get("length", ""),
             "width": dims.get("width", ""),
@@ -348,7 +349,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             })
             pp_id_counter += 1
 
-        print(f"  product id={p_id} | {np_!r} | finishes={len(finishes_set)} | pdfs={len(collect_pdfs(soup, first_url))}")
+        print(f"  product id={p_id} | {np_!r} | pdfs={len(collect_pdfs(soup, first_url))}")
         p_id += 1
 
     for row in data_rows:

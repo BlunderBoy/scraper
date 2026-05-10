@@ -322,6 +322,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             "thickness": parsed.get("thickness", ""),
             "material": "Porcelain stoneware",
             "shape": "",
+            "cut": "",
             "diameter": "",
             "length": "",
             "width": "",

@@ -41,9 +41,12 @@ from scraper_brand_utils import (
     clean_cell,
     created_stamp_now,
     dedupe_urls,
+    default_color,
     enrich_technical_pdf_title,
     norm_key,
+    normalize_category,
     normalize_space,
+    parse_dimensions_from_text,
     total_gallery_count,
     variant_sku,
     write_brand_outputs,
@@ -158,6 +161,95 @@ def derive_variant_image(default_image: str, default_sku: str, variant_sku_text:
     return ""
 
 
+_COLOR_PARTICLES = re.compile(
+    r"\b(?:cod\.?|lucido|matt|matte|opaco|satinato|lucida)\b",
+    re.I,
+)
+
+
+def _color_label_key(s: str) -> str:
+    """Strip ``cod.NNN``, finish keywords, and punctuation so swatch titles and CSV
+    color names compare equal (e.g. ``"Bianco matt cod.001"`` <-> ``"Bianco matt cod.001"`` 
+    or ``"Bicolore Bianco Matt"`` <-> ``"Bicolore bianco matt"``)."""
+    s = (s or "").strip()
+    s = re.sub(r"cod\.?\s*\d+", "", s, flags=re.I)
+    s = _COLOR_PARTICLES.sub(" ", s)
+    s = re.sub(r"[^a-zA-Z0-9\s]", " ", s)
+    return norm_key(s)
+
+
+def parse_variation_attribute(soup: BeautifulSoup) -> tuple[str, str, dict[str, str]]:
+    """Extract WooCommerce variation product id, attribute name, and {csv_label_key: slug}.
+
+    Returns ``(product_id, attribute_name, label_to_slug)`` or ``("", "", {})`` if the
+    page has no variations form.
+    """
+    form = soup.select_one("form.variations_form, form[data-product_id]")
+    if form is None:
+        return "", "", {}
+    pid = (form.get("data-product_id") or "").strip()
+    label_to_slug: dict[str, str] = {}
+    attr_name = ""
+    for li in soup.select(".thwvsf-wrapper-item-li[data-attribute_name][data-value]"):
+        attr = (li.get("data-attribute_name") or "").strip()
+        slug = (li.get("data-value") or "").strip()
+        title = (li.get("title") or li.get("aria-label") or "").strip()
+        title = re.sub(r"\s+(?:color\s+option|product\s+option)$", "", title, flags=re.I).strip()
+        if not slug or not title:
+            continue
+        if not attr_name:
+            attr_name = attr
+        key = _color_label_key(title)
+        if key and key not in label_to_slug:
+            label_to_slug[key] = slug
+    if not attr_name:
+        for sel in soup.select("form.variations_form select[name^='attribute_']"):
+            attr_name = (sel.get("name") or "").strip()
+            for opt in sel.select("option"):
+                slug = (opt.get("value") or "").strip()
+                title = opt.get_text(" ", strip=True)
+                key = _color_label_key(title)
+                if slug and key and key not in label_to_slug:
+                    label_to_slug[key] = slug
+            if attr_name:
+                break
+    return pid, attr_name, label_to_slug
+
+
+def fetch_variant_image(
+    session: requests.Session,
+    page_url: str,
+    product_id: str,
+    attr_name: str,
+    slug: str,
+) -> str:
+    """Hit the WooCommerce ``get_variation`` AJAX endpoint and return the full-size image URL."""
+    if not product_id or not attr_name or not slug:
+        return ""
+    parsed = urlparse(page_url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    lang_prefix = ""
+    parts = [p for p in (parsed.path or "").split("/") if p]
+    if parts and parts[0] in ("en", "it", "fr", "de", "es"):
+        lang_prefix = "/" + parts[0]
+    ajax_url = f"{origin}{lang_prefix}/?wc-ajax=get_variation"
+    try:
+        r = session.post(
+            ajax_url,
+            data={"product_id": product_id, attr_name: slug},
+            timeout=20,
+            headers={"X-Requested-With": "XMLHttpRequest"},
+        )
+        if r.status_code != 200 or not r.text:
+            return ""
+        data = json.loads(r.text)
+    except (requests.RequestException, json.JSONDecodeError):
+        return ""
+    img = (data or {}).get("image") or {}
+    full = clean_cell(img.get("full_src")) or clean_cell(img.get("url")) or clean_cell(img.get("src"))
+    return full
+
+
 def load_links(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path, encoding="utf-8-sig")
     for col in ("Categorie", "Subcategorie", "SUB-SUBCATEGORIE", "Colectie", "Nume produs", "Link variante"):
@@ -251,24 +343,31 @@ def scrape(*, limit_rows: int | None = None) -> None:
 
         gallery_default = hero_gallery(soup)
         default_sku = clean_cell(first.get("COD REFERINTA"))
+        product_wc_id, attr_name, label_to_slug = parse_variation_attribute(soup)
 
+        dims = parse_dimensions_from_text(description)
         product = {
             "id": p_id,
             "title": np_,
             "description": description,
-            "category": categorie.lower() if categorie else "",
+            "category": normalize_category(categorie),
             "type": subcategorie,
             "collection": colectie,
             "is_new": False,
             "subtype": sub_sub,
             "manufacturer": MANUFACTURER,
             "catalog_id": None,
-            "finishes": finishes,
+            "finishes": "",
             "position": "",
             "sizes": "",
             "thickness": "",
             "material": "Ceramica",
             "shape": "",
+            "cut": "",
+            "diameter": dims.get("diameter", ""),
+            "length": dims.get("length", ""),
+            "width": dims.get("width", ""),
+            "height": dims.get("height", ""),
         }
         products_db.append(product)
 
@@ -293,13 +392,30 @@ def scrape(*, limit_rows: int | None = None) -> None:
             })
             pp_id_counter += 1
 
+        slug_image_cache: dict[str, str] = {}
+
         for r in group:
             sku = variant_sku(SKU_PREFIX, v_id, clean_cell(r.get("COD REFERINTA")))
-            color = normalize_space(clean_cell(r.get("Variante culori"))) or "Standard"
+            csv_color = normalize_space(clean_cell(r.get("Variante culori")))
+            color = default_color(csv_color)
 
-            gallery = list(gallery_default)
+            variant_image = ""
+            slug = label_to_slug.get(_color_label_key(csv_color))
+            if slug and product_wc_id and attr_name:
+                if slug in slug_image_cache:
+                    variant_image = slug_image_cache[slug]
+                else:
+                    variant_image = fetch_variant_image(session, url, product_wc_id, attr_name, slug)
+                    slug_image_cache[slug] = variant_image
+                    time.sleep(0.05)
+
+            gallery: list[str] = []
+            if variant_image:
+                gallery.append(variant_image)
+            gallery.extend(gallery_default)
+
             row_sku = clean_cell(r.get("COD REFERINTA"))
-            if row_sku and default_sku and row_sku != default_sku and gallery_default:
+            if not variant_image and row_sku and default_sku and row_sku != default_sku and gallery_default:
                 hacked = derive_variant_image(gallery_default[0], default_sku, row_sku)
                 if hacked and hacked != gallery_default[0]:
                     gallery = [hacked] + gallery
@@ -315,7 +431,8 @@ def scrape(*, limit_rows: int | None = None) -> None:
             })
             v_id += 1
 
-        print(f"  product id={p_id} | {np_!r} | variants={len(group)} | imgs(default)={len(gallery_default)} | finishes={len(finishes_set)}")
+        matched = sum(1 for k in slug_image_cache.values() if k)
+        print(f"  product id={p_id} | {np_!r} | variants={len(group)} | imgs(default)={len(gallery_default)} | per-variant_imgs={matched}")
         p_id += 1
 
     write_brand_outputs(

@@ -51,7 +51,11 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scraper_brand_utils import enrich_technical_pdf_title
+from scraper_brand_utils import (
+    default_color,
+    enrich_technical_pdf_title,
+    normalize_category,
+)
 
 MANUFACTURER = "Omnia Floor"
 LINKS_CSV = "links.csv"
@@ -77,6 +81,11 @@ PRODUCT_CSV_COLUMNS = [
     "thickness",
     "material",
     "shape",
+    "cut",
+    "diameter",
+    "length",
+    "width",
+    "height",
 ]
 
 HEADERS = {
@@ -232,6 +241,90 @@ def infer_position(page_url: str, colectie: str) -> str:
     return "Podea"
 
 
+_OMNIA_SIZE_TOKEN = re.compile(
+    r"""
+    (?P<a>\d+(?:[.,]\d+)?)              # first number
+    (?:\s*\([^)]*\))?                   # optional ``(5+1)`` annotation
+    \s*[x×]\s*
+    (?P<b>\d+(?:[.,]\d+)?)              # second number
+    (?:\s*[x×]\s*(?P<c>\d+(?:[.,]\d+)?))?   # optional third number
+    \s*(?P<u>mm|cm)?                    # optional unit
+    """,
+    re.I | re.VERBOSE,
+)
+
+
+def _f(s: str) -> float:
+    return float(s.replace(",", "."))
+
+
+def _fmt_mm(v: float, unit: str = "mm") -> str:
+    if abs(v - round(v)) < 1e-9:
+        return f"{int(round(v))} {unit}"
+    return f"{v:g} {unit}"
+
+
+def _omnia_axes_for_token(a: str, b: str, c: str | None, unit: str) -> dict[str, str]:
+    """Pick thickness/width/length from a 2- or 3-axis token. Heuristic: smallest dim
+    (<= 30 mm-equivalent) is thickness."""
+    unit = (unit or "mm").lower()
+    if c is None:
+        return {
+            "width": _fmt_mm(_f(a), unit),
+            "length": _fmt_mm(_f(b), unit),
+        }
+    nums = [_f(a), _f(b), _f(c)]
+    smallest = min(nums)
+    smallest_idx = nums.index(smallest)
+    is_thick = (unit == "mm" and smallest <= 30) or (unit == "cm" and smallest <= 3)
+    out: dict[str, str] = {}
+    if is_thick:
+        rest = [n for i, n in enumerate(nums) if i != smallest_idx]
+        out["thickness"] = _fmt_mm(smallest, unit)
+        out["width"] = _fmt_mm(min(rest), unit)
+        out["length"] = _fmt_mm(max(rest), unit)
+    else:
+        out["width"] = _fmt_mm(nums[0], unit)
+        out["length"] = _fmt_mm(nums[1], unit)
+        out["thickness"] = _fmt_mm(nums[2], unit)
+    return out
+
+
+def _parse_omnia_sizes(raw: str) -> dict[str, str]:
+    """Convert ``"6 (5+1) X 228 X 1540 mm | 148 X 592 mm"`` into ``thickness``/
+    ``length``/``width`` plus a clean ``sizes`` string ``"228 x 1540 mm, 148 x 592 mm"``.
+    """
+    if not raw:
+        return {"sizes": "", "thickness": "", "length": "", "width": ""}
+    chunks = re.split(r"[|;]", raw)
+    formats: list[str] = []
+    thicknesses: list[str] = []
+    widths: list[str] = []
+    lengths: list[str] = []
+    for ch in chunks:
+        m = _OMNIA_SIZE_TOKEN.search(ch)
+        if not m:
+            continue
+        axes = _omnia_axes_for_token(m.group("a"), m.group("b"), m.group("c"), m.group("u") or "mm")
+        if axes.get("thickness"):
+            thicknesses.append(axes["thickness"])
+        if axes.get("width"):
+            widths.append(axes["width"])
+        if axes.get("length"):
+            lengths.append(axes["length"])
+        face = " x ".join(x for x in (axes.get("width", "").rstrip(" mmcm").strip(), axes.get("length", "").rstrip(" mmcm").strip()) if x)
+        unit_label = (m.group("u") or "mm").lower()
+        face = " x ".join(x.split()[0] for x in (axes.get("width", ""), axes.get("length", "")) if x)
+        if face:
+            formats.append(f"{face} {unit_label}")
+    return {
+        "sizes": ", ".join(dict.fromkeys(formats)),
+        "thickness": ", ".join(dict.fromkeys(thicknesses)),
+        "length": ", ".join(dict.fromkeys(lengths)),
+        "width": ", ".join(dict.fromkeys(widths)),
+    }
+
+
 def extract_product_row(
     soup: BeautifulSoup,
     page_url: str,
@@ -247,13 +340,13 @@ def extract_product_row(
     description = hero_description(soup)
     specs = parse_dl_specs(soup)
 
-    sizes = (
+    sizes_raw = (
         clean_cell(specs.get("Dimensions", ""))
         or clean_cell(specs.get("Dimension", ""))
         or clean_cell(specs.get("Size", ""))
         or clean_cell(specs.get("Sizes", ""))
     )
-    if not sizes:
+    if not sizes_raw:
         blob = (soup.select_one("main") or soup).get_text(" ", strip=True)
         found = re.findall(
             r"\d+(?:[.,]\d+)?\s*[x×]\s*\d+(?:[.,]\d+)?(?:\s*[x×]\s*\d+(?:[.,]\d+)?)?\s*(?:mm|cm)?",
@@ -261,10 +354,9 @@ def extract_product_row(
             flags=re.I,
         )
         if found:
-            sizes = " | ".join(sorted(set(found), key=str.casefold))
-    wear = specs.get("Wear Layer (overlay)", "") or specs.get("Wear Layer", "")
-    ixpe = specs.get("Integrated IXPE Underlay", "")
-    thickness = " | ".join(x for x in [wear, ixpe] if x)
+            sizes_raw = " | ".join(sorted(set(found), key=str.casefold))
+
+    parsed_sizes = _parse_omnia_sizes(sizes_raw)
 
     non_format = [x for x in variant_type_labels if not _omnia_variant_label_is_format_only(x)]
     if non_format:
@@ -275,7 +367,7 @@ def extract_product_row(
     return {
         "title": title,
         "description": description,
-        "category": categorie.lower() if categorie else "",
+        "category": normalize_category(categorie),
         "type": subcategorie,
         "collection": colectie,
         "is_new": False,
@@ -284,10 +376,15 @@ def extract_product_row(
         "catalog_id": None,
         "finishes": finishes,
         "position": infer_position(page_url, colectie),
-        "sizes": sizes,
-        "thickness": thickness,
+        "sizes": parsed_sizes["sizes"],
+        "thickness": parsed_sizes["thickness"],
         "material": infer_material(description, title, categorie),
         "shape": "",
+        "cut": "",
+        "diameter": "",
+        "length": parsed_sizes["length"],
+        "width": parsed_sizes["width"],
+        "height": "",
     }
 
 
@@ -394,7 +491,7 @@ def load_links_csv(path: Path) -> pd.DataFrame:
 
 def variant_color_from_csv(row: pd.Series) -> str:
     """``Nume variante`` from the sheet only; ``Standard`` when blank (no em dash / no shade prefix)."""
-    return clean_cell(row.get("Nume variante")) or "Standard"
+    return default_color(clean_cell(row.get("Nume variante")))
 
 
 def gallery_for_variant(block: dict[str, Any], nume_variante: str) -> list[str]:

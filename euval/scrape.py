@@ -276,6 +276,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             "thickness": "",
             "material": "Terrazzo",
             "shape": "",
+            "cut": "",
             "diameter": "",
             "length": "",
             "width": "",

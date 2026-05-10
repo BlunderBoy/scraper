@@ -41,9 +41,11 @@ if str(ROOT) not in sys.path:
 from scraper_brand_utils import (
     created_stamp_now,
     dedupe_urls,
+    default_color,
     enrich_technical_pdf_title,
     format_csv_title,
     norm_key,
+    normalize_category,
     normalize_space,
     total_gallery_count,
     variant_sku,
@@ -299,6 +301,22 @@ def parse_moooi_surface_page(soup: BeautifulSoup, page_url: str) -> dict[str, An
         elif "thick" in k:
             thickness = v
 
+    origin = f"{urlparse(page_url).scheme}://{urlparse(page_url).netloc}"
+
+    def _resolve_moooi_asset(href: str) -> str:
+        """Moooi's ``../public/prodcolors/...`` hrefs are intended to resolve to
+        ``https://moooiceramicsurfaces.com/public/...`` (the page's ``../`` count
+        does not match the actual depth, so urljoin would emit ``/en/public/...``)."""
+        s = (href or "").strip()
+        if not s:
+            return ""
+        if s.startswith("http"):
+            return s
+        s = re.sub(r"^(?:\.\./)+", "", s)
+        if s.startswith("/"):
+            return urljoin(origin + "/", s.lstrip("/"))
+        return urljoin(origin + "/", s)
+
     color_galleries: dict[str, list[str]] = {}
     for li in soup.select(".minimali ul li"):
         a = li.select_one("a.glightbox[href]")
@@ -318,11 +336,12 @@ def parse_moooi_surface_page(soup: BeautifulSoup, page_url: str) -> dict[str, An
         nk = norm_key(label)
         if nk not in color_galleries:
             color_galleries[nk] = []
-        color_galleries[nk].append(urljoin(page_url, href))
+        if href:
+            color_galleries[nk].append(_resolve_moooi_asset(href))
         for img in a.select("img[src]"):
             src = (img.get("src") or "").strip()
             if src and "-thumb" not in src.casefold():
-                color_galleries[nk].append(urljoin(page_url, src))
+                color_galleries[nk].append(_resolve_moooi_asset(src))
 
     for k in list(color_galleries.keys()):
         color_galleries[k] = dedupe_urls(color_galleries[k])
@@ -346,6 +365,23 @@ def parse_page(soup: BeautifulSoup, page_url: str) -> dict[str, Any]:
     if "moooiceramicsurfaces.com" in host:
         return parse_moooi_surface_page(soup, page_url)
     return parse_abk_collection_page(soup, page_url)
+
+
+_IMPERIAL_PARENS_RE = re.compile(r"\s*\(\s*\d[^)]*[\"”][^)]*\)\s*", re.I)
+
+
+def _clean_size_token(s: str) -> str:
+    """Strip the trailing imperial parenthetical, e.g. ``120×120 (48"x48")`` -> ``120x120``."""
+    s = _IMPERIAL_PARENS_RE.sub("", s).strip()
+    s = s.replace("×", "x").replace("X", "x")
+    return s.strip()
+
+
+def _clean_sizes_csv(raw: str) -> str:
+    if not raw:
+        return ""
+    parts = [_clean_size_token(p) for p in re.split(r"[,;]", raw)]
+    return ", ".join(p for p in dict.fromkeys(parts) if p)
 
 
 def gallery_for_color(name: str, color_galleries: dict[str, list[str]]) -> list[str]:
@@ -438,7 +474,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         desc = clean_cell(parsed.get("description", ""))
 
         finishes = clean_cell(parsed.get("finishes", ""))
-        sizes = clean_cell(parsed.get("sizes", ""))
+        sizes = _clean_sizes_csv(clean_cell(parsed.get("sizes", "")))
         thickness = clean_cell(parsed.get("thickness", ""))
         material = clean_cell(parsed.get("material", ""))
         if not material:
@@ -450,17 +486,21 @@ def scrape(*, limit_rows: int | None = None) -> None:
         subcategorie = clean_cell(row.get("Subcategorie"))
         brand = clean_cell(row.get(subtype_col))
 
+        manufacturer = MANUFACTURER
+        if "moooi" in brand.casefold():
+            manufacturer = "MOOOI BY ABK"
+
         products_db.append(
             {
                 "id": p_id,
                 "title": title,
                 "description": desc,
-                "category": categorie.lower() if categorie else "",
+                "category": normalize_category(categorie),
                 "type": subcategorie,
                 "collection": colectie,
                 "is_new": False,
                 "subtype": brand,
-                "manufacturer": MANUFACTURER,
+                "manufacturer": manufacturer,
                 "catalog_id": None,
                 "finishes": finishes,
                 "position": infer_position(categorie, subcategorie),
@@ -468,6 +508,11 @@ def scrape(*, limit_rows: int | None = None) -> None:
                 "thickness": thickness,
                 "material": material,
                 "shape": "",
+                "cut": "",
+                "diameter": "",
+                "length": "",
+                "width": "",
+                "height": "",
             }
         )
 
@@ -504,7 +549,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         name = nume
         sku = variant_sku(SKU_PREFIX, v_id, clean_cell(row.get("COD REFERINTA")))
         gurls = gallery_for_color(name, color_map)
-        col_label = name.title() if name else ""
+        col_label = default_color(name.title() if name else "")
 
         variants_db.append(
             {

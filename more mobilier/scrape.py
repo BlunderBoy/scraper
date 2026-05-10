@@ -49,9 +49,12 @@ from scraper_brand_utils import (
     clean_cell,
     created_stamp_now,
     dedupe_urls,
+    default_color,
     enrich_technical_pdf_title,
     norm_key,
+    normalize_category,
     normalize_space,
+    parse_dimensions_from_text,
     total_gallery_count,
     variant_sku,
     write_brand_outputs,
@@ -152,13 +155,25 @@ def collect_pdfs(soup: BeautifulSoup, page_url: str) -> list[dict[str, str]]:
     return out
 
 
-def merged_variant_color(row: pd.Series) -> str:
-    parts: list[str] = []
-    for col in ("Variante LEMN/METAL", "Variante PIELE", "Variante TEXTIL"):
-        v = clean_cell(row.get(col))
+VARIANT_COLUMNS = ("Variante LEMN/METAL", "Variante PIELE", "Variante TEXTIL")
+
+
+def row_variant_cells(row: pd.Series) -> list[str]:
+    """Return the non-empty individual variant labels from a single CSV row.
+
+    Per ``hints.txt`` each non-empty cell is its own variant; we do **not** join
+    the three columns into a single ``"wood / leather / textil"`` mega-string.
+    """
+    out: list[str] = []
+    for col in VARIANT_COLUMNS:
+        v = normalize_space(clean_cell(row.get(col)))
         if v:
-            parts.append(normalize_space(v))
-    return " / ".join(parts)
+            out.append(v)
+    return out
+
+
+def has_any_variant(row: pd.Series) -> bool:
+    return bool(row_variant_cells(row))
 
 
 def load_links(path: Path) -> pd.DataFrame:
@@ -189,7 +204,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         np_ = clean_cell(row.get("Nume produs"))
         if not link.startswith("http") or not np_:
             continue
-        if not merged_variant_color(row):
+        if not has_any_variant(row):
             # Skip rows that have no finishes; can be a header artefact.
             continue
         data_rows.append(row)
@@ -247,12 +262,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         sub_sub = clean_cell(first.get("SUB-SUBCATEGORIE"))
         colectie = clean_cell(first.get("Colectie"))
 
-        page_title_text = page_title(soup)
-        # The site renders some pages with a placeholder H1 of just "more"; fall back to the CSV name.
-        if not page_title_text or page_title_text.lower() == "more":
-            title = np_
-        else:
-            title = page_title_text
+        title = np_
 
         description = page_description(soup)
         gallery = hero_gallery(soup, url)
@@ -261,18 +271,18 @@ def scrape(*, limit_rows: int | None = None) -> None:
         finishes_set: list[str] = []
         seen_fin: set[str] = set()
         for r in group:
-            for col in ("Variante LEMN/METAL", "Variante PIELE", "Variante TEXTIL"):
-                v = normalize_space(clean_cell(r.get(col)))
-                if v and v not in seen_fin:
+            for v in row_variant_cells(r):
+                if v not in seen_fin:
                     seen_fin.add(v)
                     finishes_set.append(v)
         finishes = ", ".join(finishes_set)
+        dim_info = parse_dimensions_from_text(description) if description else {}
 
         product = {
             "id": p_id,
             "title": title,
             "description": description,
-            "category": categorie.lower() if categorie else "",
+            "category": normalize_category(categorie),
             "type": subcategorie,
             "collection": colectie,
             "is_new": False,
@@ -285,6 +295,11 @@ def scrape(*, limit_rows: int | None = None) -> None:
             "thickness": "",
             "material": "",
             "shape": "",
+            "cut": "",
+            "diameter": dim_info.get("diameter", ""),
+            "length": dim_info.get("length", ""),
+            "width": dim_info.get("width", ""),
+            "height": dim_info.get("height", ""),
         }
         products_db.append(product)
 
@@ -309,21 +324,30 @@ def scrape(*, limit_rows: int | None = None) -> None:
             })
             pp_id_counter += 1
 
+        seen_variant_labels: set[str] = set()
+        variant_count = 0
         for r in group:
-            color = merged_variant_color(r) or "Standard"
-            sku = variant_sku(SKU_PREFIX, v_id, clean_cell(r.get("COD REFERINTA")))
-            variants_db.append({
-                "id": v_id,
-                "product_id": p_id,
-                "sku": sku,
-                "color": color,
-                "url": url,
-                "gallery_photos": json.dumps(gallery, ensure_ascii=False),
-                "technical_photos": json.dumps([], ensure_ascii=False),
-            })
-            v_id += 1
+            row_cells = row_variant_cells(r)
+            for cell in row_cells:
+                key = cell.casefold()
+                if key in seen_variant_labels:
+                    continue
+                seen_variant_labels.add(key)
+                color = default_color(cell)
+                sku = variant_sku(SKU_PREFIX, v_id, clean_cell(r.get("COD REFERINTA")))
+                variants_db.append({
+                    "id": v_id,
+                    "product_id": p_id,
+                    "sku": sku,
+                    "color": color,
+                    "url": url,
+                    "gallery_photos": json.dumps(gallery, ensure_ascii=False),
+                    "technical_photos": json.dumps([], ensure_ascii=False),
+                })
+                v_id += 1
+                variant_count += 1
 
-        print(f"  product id={p_id} | {title!r} | variants={len(group)} | imgs={len(gallery)} | pdfs={len(pdfs)}")
+        print(f"  product id={p_id} | {title!r} | variants={variant_count} | imgs={len(gallery)} | pdfs={len(pdfs)}")
         p_id += 1
 
     write_brand_outputs(

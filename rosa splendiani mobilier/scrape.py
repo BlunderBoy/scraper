@@ -44,9 +44,12 @@ from scraper_brand_utils import (
     clean_cell,
     created_stamp_now,
     dedupe_urls,
+    default_color,
     enrich_technical_pdf_title,
     norm_key,
+    normalize_category,
     normalize_space,
+    parse_dimensions_from_text,
     total_gallery_count,
     variant_sku,
     write_brand_outputs,
@@ -108,20 +111,178 @@ def page_title(soup: BeautifulSoup) -> str:
 
 
 def page_description(main: Tag) -> str:
+    """First 1-2 ``<p>`` paragraphs that follow the H1 -- not the entire page text.
+
+    The site has nested wrapper ``<div>`` elements containing the full content; we
+    skip those and only pick leaf ``<p>`` paragraphs to keep the description short.
+    """
+    h1 = main.select_one("h1")
+    if h1 is None:
+        return ""
     parts: list[str] = []
     seen: set[str] = set()
-    for el in main.find_all(["p", "h3", "h4"]):
-        t = normalize_space(el.get_text(" ", strip=True))
-        if not t or len(t) < 30:
+    nxt = h1
+    for _ in range(120):
+        nxt = nxt.find_next()
+        if nxt is None:
+            break
+        if not isinstance(nxt, Tag) or nxt.name != "p":
+            continue
+        if nxt.find(["h2", "h3", "h4", "h5"]):
+            continue
+        t = normalize_space(nxt.get_text(" ", strip=True))
+        if not t or len(t) < 40 or len(t) > 1500:
             continue
         low = t.lower()
-        if "p.iva" in low or "p.i. and c.f." in low or "zona industriale" in low or "rosa splendiani" in low and "©" in t:
+        if "p.iva" in low or "p.i. and c.f." in low or "zona industriale" in low:
+            continue
+        if "all rights reserved" in low or "©" in t:
+            continue
+        if "cookie" in low and len(t) < 200:
             continue
         if t in seen:
             continue
         seen.add(t)
         parts.append(t)
+        if len(parts) >= 2:
+            break
     return "\n\n".join(parts)
+
+
+_RO_TO_EN_MODULE_KEYWORDS: dict[str, list[str]] = {
+    "simplu": ["single"],
+    "simpla": ["single"],
+    "colt": ["corner"],
+    "coltz": ["corner"],
+    "dublu": ["double"],
+    "dubla": ["double"],
+    "mare": ["large", "big"],
+    "mic": ["small"],
+    "puf": ["pouff", "pouf", "pouffe", "ottoman", "footstool"],
+    "rotund": ["round"],
+    "rotunda": ["round"],
+    "patrat": ["square"],
+    "patrata": ["square"],
+    "dreptunghiular": ["rectangular"],
+    "central": ["central", "middle"],
+    "spatar": ["backrest", "back"],
+    "perna": ["pillow", "cushion"],
+    "perne": ["pillows", "cushions"],
+    "decorative": ["decorative"],
+    "fotoliu": ["armchair"],
+    "canapea": ["sofa"],
+    "scaun": ["chair"],
+    "modular": ["modular"],
+    "set": ["set"],
+}
+
+_HIGH_VALUE_TOKENS = {
+    "single", "double", "corner", "large", "big", "small", "round", "square",
+    "pouff", "pouf", "pouffe", "ottoman", "footstool", "armchair", "chair", "sofa",
+    "backrest", "pillow", "cushion", "decorative", "modular", "central", "rectangular",
+}
+
+
+def _strip_diacritics(s: str) -> str:
+    s = re.sub(r"[\u0218\u0219]", "s", s)
+    s = re.sub(r"[\u021a\u021b]", "t", s)
+    s = re.sub(r"[âă]", "a", s)
+    s = re.sub(r"î", "i", s)
+    return s
+
+
+def _variant_keywords(label: str) -> set[str]:
+    """Translate Romanian variant labels (or English H4 labels) into a comparable
+    set of English keywords + dimension tokens.
+    """
+    s = _strip_diacritics((label or "").lower())
+    out: set[str] = set()
+    for tok in re.findall(r"[a-z]+", s):
+        if tok in _RO_TO_EN_MODULE_KEYWORDS:
+            out.update(_RO_TO_EN_MODULE_KEYWORDS[tok])
+        elif len(tok) >= 4:
+            out.add(tok)
+    for n in re.findall(r"\d{2,4}", label or ""):
+        out.add(n)
+    return out
+
+
+def build_module_label_to_image(main: Tag) -> dict[str, str]:
+    """Walk DOM in order. On site, each module image precedes its H4 label.
+
+    Tracks the most recent product image and pairs it with the next ``<h4>``.
+    Stops harvesting after a "Matching and related" / similar section heading.
+    """
+    out: dict[str, str] = {}
+    last_img: str | None = None
+    for el in main.descendants:
+        if not isinstance(el, Tag):
+            continue
+        if el.name == "img":
+            src = (el.get("src") or "").strip()
+            if not src:
+                continue
+            low = src.lower()
+            if "wp-content/uploads" not in low:
+                continue
+            if "favicon" in low or "logo" in low or "brandbook" in low:
+                continue
+            if re.search(r"-\d+x\d+(?=\.\w+$)", src):
+                src = re.sub(r"-\d+x\d+(?=\.\w+$)", "", src)
+            last_img = src
+        elif el.name in ("h2", "h3", "h4", "h5"):
+            text = normalize_space(el.get_text(" ", strip=True))
+            if not text or len(text) > 200:
+                continue
+            low_t = text.lower()
+            if any(needle in low_t for needle in SECTION_CUTS):
+                break
+            # Skip very generic / unrelated headings
+            if any(s in low_t for s in ("contacts", "policy", "outdoor", "interiors", "company")):
+                continue
+            if last_img is not None:
+                key = norm_key(text)
+                if key not in out:
+                    out[key] = last_img
+                last_img = None
+    return out
+
+
+def match_variant_image(
+    variant_label: str,
+    module_map: dict[str, str],
+) -> str:
+    """Pick the module image whose H4 text shares the most distinctive keywords with ``variant_label``.
+
+    High-value tokens (single/double/corner/round/etc.) and numeric dimensions count
+    extra so module-specific modifiers win over generic shared words.
+    """
+    if not module_map or not variant_label:
+        return ""
+    var_kw = _variant_keywords(variant_label)
+    if not var_kw:
+        return ""
+    best_score = -1.0
+    best_url = ""
+    for label, url in module_map.items():
+        lab_kw = _variant_keywords(label)
+        if not lab_kw:
+            continue
+        common = var_kw & lab_kw
+        score = 0.0
+        for k in common:
+            if k.isdigit():
+                score += 3.0
+            elif k in _HIGH_VALUE_TOKENS:
+                score += 2.0
+            else:
+                score += 0.25
+        if score > best_score:
+            best_score = score
+            best_url = url
+    if best_score >= 1.5:
+        return best_url
+    return ""
 
 
 def gallery_urls(main: Tag) -> list[str]:
@@ -263,6 +424,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         description = ""
         gallery: list[str] = []
         pdfs: list[dict[str, str]] = []
+        module_map: dict[str, str] = {}
         if url:
             soup = get_soup(url)
             if soup is not None:
@@ -270,36 +432,34 @@ def scrape(*, limit_rows: int | None = None) -> None:
                 description = page_description(trimmed)
                 gallery = gallery_urls(trimmed)
                 pdfs = collect_pdfs(soup, url)
+                module_map = build_module_label_to_image(trimmed)
         else:
             print(f"  no URL for {np_!r} -- product page skipped")
 
-        finishes_set: list[str] = []
-        seen_fin: set[str] = set()
-        for r in group:
-            for col in ("Variante culori", "Nume variante"):
-                v = normalize_space(clean_cell(r.get(col)))
-                if v and v not in seen_fin:
-                    seen_fin.add(v)
-                    finishes_set.append(v)
-        finishes = ", ".join(finishes_set)
+        dim_info = parse_dimensions_from_text(description) if description else {}
 
         product = {
             "id": p_id,
             "title": np_,
             "description": description,
-            "category": categorie.lower() if categorie else "",
+            "category": normalize_category(categorie),
             "type": subcategorie,
             "collection": colectie,
             "is_new": False,
             "subtype": sub_sub,
             "manufacturer": MANUFACTURER,
             "catalog_id": None,
-            "finishes": finishes,
+            "finishes": "",
             "position": "",
             "sizes": "",
             "thickness": "",
-            "material": "Aluminium / Olefin rope",
+            "material": "",
             "shape": "",
+            "cut": "",
+            "diameter": dim_info.get("diameter", ""),
+            "length": dim_info.get("length", ""),
+            "width": dim_info.get("width", ""),
+            "height": dim_info.get("height", ""),
         }
         products_db.append(product)
 
@@ -325,18 +485,27 @@ def scrape(*, limit_rows: int | None = None) -> None:
             pp_id_counter += 1
 
         for r in group:
-            color = variant_color(r) or "Standard"
+            raw_color = variant_color(r)
+            color = default_color(raw_color)
             sku = variant_sku(SKU_PREFIX, v_id, clean_cell(r.get("COD REFERINTA")))
             row_url = clean_cell(r.get("Link variante"))
             if not row_url.startswith("http"):
                 row_url = url
+
+            module_label = normalize_space(clean_cell(r.get("Nume variante")))
+            variant_gallery = list(gallery)
+            if module_map and module_label:
+                matched = match_variant_image(module_label, module_map)
+                if matched:
+                    variant_gallery = dedupe_urls([matched] + gallery)
+
             variants_db.append({
                 "id": v_id,
                 "product_id": p_id,
                 "sku": sku,
                 "color": color,
                 "url": row_url,
-                "gallery_photos": json.dumps(gallery, ensure_ascii=False),
+                "gallery_photos": json.dumps(variant_gallery, ensure_ascii=False),
                 "technical_photos": json.dumps([], ensure_ascii=False),
             })
             v_id += 1

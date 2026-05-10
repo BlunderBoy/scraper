@@ -51,7 +51,13 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scraper_brand_utils import aggregate_unique_column, enrich_technical_pdf_title
+from scraper_brand_utils import (
+    aggregate_unique_column,
+    default_color,
+    enrich_technical_pdf_title,
+    normalize_category,
+    parse_dimensions_from_text,
+)
 
 MANUFACTURER = "Bathco"
 LINKS_CSV = "links.csv"
@@ -73,11 +79,17 @@ PRODUCT_CSV_COLUMNS = [
     "subtype",
     "manufacturer",
     "catalog_id",
+    "finishes",
     "position",
     "sizes",
     "thickness",
     "material",
     "shape",
+    "cut",
+    "diameter",
+    "length",
+    "width",
+    "height",
 ]
 
 HEADERS = {
@@ -397,21 +409,30 @@ def extract_product_row(
     sizes = s_csv or dim_sizes or (specs.get("Dimensions", "") or specs.get("Size", "") or specs.get("Sizes", ""))
     thickness = specs.get("Thickness", "") or ""
 
+    dim_blob = " ".join(filter(None, [sizes, description]))
+    dim_info = parse_dimensions_from_text(dim_blob) if dim_blob else {}
+
     return {
         "title": title,
         "description": description,
-        "category": categorie.lower() if categorie else "",
+        "category": normalize_category(categorie),
         "type": subcategorie,
         "collection": colectie,
         "is_new": False,
         "subtype": sub_sub,
         "manufacturer": MANUFACTURER,
         "catalog_id": None,
+        "finishes": "",
         "position": infer_position(categorie, subcategorie, sub_sub),
         "sizes": sizes,
         "thickness": thickness,
         "material": infer_material(description, categorie, subcategorie, sub_sub),
         "shape": "",
+        "cut": "",
+        "diameter": dim_info.get("diameter", ""),
+        "length": dim_info.get("length", ""),
+        "width": dim_info.get("width", ""),
+        "height": dim_info.get("height", ""),
     }
 
 
@@ -611,7 +632,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             print(f"  WARN no page for variant {clean_cell(row.get('COD REFERINTA'))} -> {req_u}")
 
         sku = sanitize_filename(clean_cell(row.get("COD REFERINTA")).replace("  ", " "))
-        color_disp = variant_color_label(row)
+        color_disp = default_color(variant_color_label(row))
 
         variants_db.append(
             {

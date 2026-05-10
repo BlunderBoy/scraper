@@ -61,6 +61,54 @@ def extract_sizes_wxh_thickness_cm_from_soup(soup: BeautifulSoup) -> list[str]:
     return extract_sizes_wxh_thickness_cm_from_text(root.get_text(" ", strip=True))
 
 
+def _fmt_mm_str(mm_raw: str) -> str:
+    s = (mm_raw or "").replace(",", ".")
+    try:
+        v = float(s)
+    except ValueError:
+        return (mm_raw or "").strip()
+    if abs(v - round(v)) < 1e-9:
+        return f"{int(round(v))} mm"
+    t = f"{v:.3f}".rstrip("0").rstrip(".")
+    return f"{t} mm"
+
+
+def extract_sizes_and_thicknesses_cm_from_text(blob: str) -> tuple[list[str], list[str]]:
+    """Return ``(["120x60 cm", ...], ["8.5 mm", ...])`` from a Fondovalle text blob.
+
+    ``sizes`` lists ``WxH cm`` formats with no thickness suffix; ``thicknesses``
+    lists each unique ``mm`` value found right before a ``WxH cm`` token.
+    """
+    sizes: list[str] = []
+    thicks: list[str] = []
+    seen_size: set[str] = set()
+    seen_thick: set[str] = set()
+    text = blob or ""
+    for m in RE_FV_WH_CM.finditer(text):
+        w, h = m.group("w"), m.group("h")
+        start = max(0, m.start() - 140)
+        prefix = text[start : m.start()]
+        mm_matches = list(RE_FV_MM_TOKEN.finditer(prefix))
+        size_tok = f"{w}x{h} cm"
+        if size_tok not in seen_size:
+            seen_size.add(size_tok)
+            sizes.append(size_tok)
+        if mm_matches:
+            th_raw = mm_matches[-1].group(1)
+            th = _fmt_mm_str(th_raw)
+            if th and th not in seen_thick:
+                seen_thick.add(th)
+                thicks.append(th)
+    return sizes, thicks
+
+
+def extract_sizes_and_thicknesses_cm_from_soup(
+    soup: BeautifulSoup,
+) -> tuple[list[str], list[str]]:
+    root = soup.select_one(".color-det") or soup.select_one("body") or soup
+    return extract_sizes_and_thicknesses_cm_from_text(root.get_text(" ", strip=True))
+
+
 def decorate_fondovalle_technical_pdf_titles(
     docs: list[dict[str, str]],
     *,
@@ -517,12 +565,12 @@ def extract_product_row_common(
     formats_c = clean_cell(specs_c.get("Formats", ""))
 
     if fondovalle_ceramice:
-        tokens = extract_sizes_wxh_thickness_cm_from_soup(soup)
-        if not tokens:
-            tokens = extract_sizes_wxh_thickness_cm_from_text(
+        size_tokens, thick_tokens = extract_sizes_and_thicknesses_cm_from_soup(soup)
+        if not size_tokens:
+            size_tokens, thick_tokens = extract_sizes_and_thicknesses_cm_from_text(
                 " ".join(x for x in (sizes_csv_clean, dim_sizes) if x)
             )
-        if not tokens:
+        if not size_tokens:
             specs_dims = " ".join(
                 x
                 for x in (
@@ -532,8 +580,9 @@ def extract_product_row_common(
                 )
                 if x
             )
-            tokens = extract_sizes_wxh_thickness_cm_from_text(specs_dims)
-        sizes = ", ".join(dict.fromkeys(tokens))
+            size_tokens, thick_tokens = extract_sizes_and_thicknesses_cm_from_text(specs_dims)
+        sizes = ", ".join(dict.fromkeys(size_tokens))
+        ceramice_thickness = ", ".join(dict.fromkeys(thick_tokens))
         sub_out = ""
     else:
         size_candidates = [
@@ -548,11 +597,19 @@ def extract_product_row_common(
         sizes = " | ".join(list(dict.fromkeys(size_candidates)))
         sub_out = sub_sub
 
-    thickness = (
-        clean_cell(specs.get("Thickness", ""))
-        or clean_cell(specs_c.get("Thickness", ""))
-        or ""
-    )
+    if fondovalle_ceramice:
+        thickness = (
+            ceramice_thickness
+            or clean_cell(specs.get("Thickness", ""))
+            or clean_cell(specs_c.get("Thickness", ""))
+            or ""
+        )
+    else:
+        thickness = (
+            clean_cell(specs.get("Thickness", ""))
+            or clean_cell(specs_c.get("Thickness", ""))
+            or ""
+        )
 
     surface_s = clean_cell(specs_c.get("Surface", "")) or clean_cell(parse_tech_info(soup).get("Surface", ""))
     csv_fin_list = [normalize_space(x).title() for x in finishes_labels if clean_cell(x)]
@@ -587,6 +644,10 @@ def extract_product_row_common(
         "material": infer_material(description, categorie, subcategorie, sub_sub),
         "shape": "",
         "cut": "",
+        "diameter": "",
+        "length": "",
+        "width": "",
+        "height": "",
     }
 
 

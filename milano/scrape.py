@@ -37,9 +37,14 @@ from scraper_brand_utils import (
     clean_cell,
     created_stamp_now,
     dedupe_urls,
+    default_color,
     enrich_technical_pdf_title,
+    join_unique_csv,
     norm_key,
+    normalize_category,
     normalize_space,
+    parse_dimensions_from_text,
+    split_dimension_token,
     total_gallery_count,
     variant_sku,
     write_brand_outputs,
@@ -181,18 +186,51 @@ def formato_technical_image_urls(urls: list[str]) -> list[str]:
     return dedupe_urls(out)
 
 
+_NON_PRODUCT_IMAGE_PATTERNS = re.compile(
+    r"/(?:logo|icon|wishlist|avatar|favicon|"
+    r"frame[-_]?\d+|"
+    r"guida[-_]|gids?[-_]|news[-_]|articolo[-_]|"
+    r"superficie[-_])",
+    re.I,
+)
+
+
 def gallery_urls(soup: BeautifulSoup, page_url: str) -> list[str]:
+    """Real product/lifestyle photos only. Surface swatches, format diagrams, icon-frames,
+    and blog/guide headers are excluded so they do not pollute the gallery."""
     origin = f"{urlparse(page_url).scheme}://{urlparse(page_url).netloc}"
     out: list[str] = []
     og = soup.select_one('meta[property="og:image"]')
     if og and og.get("content"):
-        out.append(urljoin(origin, og["content"].strip()))
+        cand = urljoin(origin, og["content"].strip())
+        if not _NON_PRODUCT_IMAGE_PATTERNS.search(cand):
+            out.append(cand)
     for img in soup.select('img[src*="wp-content/uploads"]'):
         src = (img.get("src") or "").strip()
-        low = src.casefold()
-        if any(x in low for x in ("logo", "icon", "wishlist", "avatar")):
+        if not src:
             continue
-        out.append(urljoin(origin, src))
+        cand = urljoin(origin, src)
+        if _NON_PRODUCT_IMAGE_PATTERNS.search(cand):
+            continue
+        parent_class = " ".join(c for el in (img.parent, img.parent.parent if img.parent else None) if el is not None for c in (el.get("class") or []))
+        if "elementor-image-box-img" in parent_class or "tbl-cont-ct" in parent_class:
+            continue
+        out.append(cand)
+    return dedupe_urls(out)
+
+
+def technical_image_urls(soup: BeautifulSoup, page_url: str) -> list[str]:
+    """Surface-texture swatches and ``Formato`` diagrams on the Milano page."""
+    origin = f"{urlparse(page_url).scheme}://{urlparse(page_url).netloc}"
+    out: list[str] = []
+    for img in soup.select('img[src*="wp-content/uploads"]'):
+        src = (img.get("src") or "").strip()
+        if not src:
+            continue
+        cand = urljoin(origin, src)
+        low = cand.casefold()
+        if "formato" in low or "/superficie" in low or "superficie-" in low:
+            out.append(cand)
     return dedupe_urls(out)
 
 
@@ -369,16 +407,31 @@ def extract_product(
         or listone_standard_dimension_line(soup)
         or supplementary_sizes_from_html(soup)
     )
-    sizes = normalize_milano_sizes_string(sizes_raw)
-    if not sizes and sizes_raw:
-        sizes = normalize_space(
+    sizes_normalized = normalize_milano_sizes_string(sizes_raw)
+    sizes_str = sizes_normalized
+    if not sizes_str and sizes_raw:
+        sizes_str = normalize_space(
             sizes_raw.replace("|", ",").replace(";", ",").replace("·", ",").replace("•", ",")
         )
+
+    # If the cleaned size is a single ``WxLxT cm`` token, lift the thickness out into its own column.
+    thickness = ""
+    width = ""
+    length_v = ""
+    if sizes_str and "," not in sizes_str:
+        parts = split_dimension_token(sizes_str)
+        if parts:
+            width = parts.get("width", "")
+            length_v = parts.get("length", "")
+            thickness = parts.get("height", "")
+            sizes_str = ", ".join(p for p in (width, length_v) if p)
+
+    cut_clean = _normalize_milano_cut(cut_csv)
     mat = clean_cell(material_csv) or "Wood"
     return {
         "title": title,
         "description": description,
-        "category": categorie.lower() if categorie else "",
+        "category": normalize_category(categorie),
         "type": subcategorie,
         "collection": colectie,
         "is_new": False,
@@ -387,12 +440,32 @@ def extract_product(
         "catalog_id": None,
         "finishes": finishes,
         "position": "",
-        "sizes": sizes,
-        "thickness": "",
+        "sizes": sizes_str,
+        "thickness": thickness,
         "material": mat,
         "shape": "",
-        "cut": clean_cell(cut_csv),
+        "cut": cut_clean,
+        "diameter": "",
+        "length": length_v,
+        "width": width,
+        "height": "",
     }
+
+
+def _normalize_milano_cut(raw: str) -> str:
+    """``"PLACI; Spina 90° ; Chevron 45°"`` -> ``"Placi, Spina 90°, Chevron 45°"``."""
+    if not raw:
+        return ""
+    parts = re.split(r"[;,]", raw)
+    cleaned: list[str] = []
+    for p in parts:
+        s = normalize_space(p)
+        if not s:
+            continue
+        if s.upper() == "PLACI":
+            s = "Placi"
+        cleaned.append(s)
+    return join_unique_csv(cleaned)
 
 
 def scrape(*, limit_rows: int | None = None) -> None:
@@ -549,7 +622,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             gurls = gallery_urls(soup, final_url)
             tech_urls = dedupe_urls(
                 listone_standard_technical_image_urls(soup, final_url)
-                + formato_technical_image_urls(gurls)
+                + technical_image_urls(soup, final_url)
             )
             tech_set = set(tech_urls)
             gurls = [u for u in gurls if u not in tech_set]
@@ -558,7 +631,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         fin_row = (
             clean_cell(row.get(fin_key_global)) if fin_key_global else ""
         )
-        col = variant_color(row, fin_row)
+        col = default_color(variant_color(row, fin_row))
 
         variants_db.append(
             {
