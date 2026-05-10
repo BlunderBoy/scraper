@@ -4,8 +4,8 @@ Quintessenza Ceramiche — collection pages from ``links.csv`` (quintessenzacera
 Each CSV row is one ``collezioni`` URL (treated as one product). Variants are the
 Elementor image-box tiles: color title, manufacturer SKU in the
 description line (variant line size is ignored), and a ``gallery_photos`` list of up to
-five URLs (variant tile first when unique, then og:image, hero/layout images, then
-image-box grid). Product ``sizes`` are lowercased with a space before ``cm``/``mm``.
+five URLs (variant tile first when unique, then Elementor slideshow hero, one layout
+image beside the copy, then three from ``a.e-gallery-item`` lightbox gallery).
 Thickness is normalized to ``Xmm, Ymm``. Marketing description drops pipe-separated
 collection teasers and stub intros that only introduce further paragraphs.
 Sizes come from the Elementor size heading (metric only; see ``extract_sizes_field``). Product thickness,
@@ -480,37 +480,115 @@ def _is_product_photo_url(url: str) -> bool:
     return bool(_PHOTO_URL_EXT.search(url))
 
 
+def _elementor_style_blob(soup: BeautifulSoup) -> str:
+    parts: list[str] = []
+    for st in soup.find_all("style"):
+        s = st.string
+        if s:
+            parts.append(s)
+    return "\n".join(parts)
+
+
+def _css_url_from_background_style(style: str) -> str:
+    m = re.search(r"background-image\s*:\s*url\(\s*([^)]+)\s*\)", style or "", re.I)
+    if not m:
+        return ""
+    return (m.group(1) or "").strip().strip("' \"")
+
+
+def _elementor_slide_bg_url_from_css(style_blob: str, repeater_suffix: str) -> str:
+    """Resolve ``background-image:url(...)`` for ``.elementor-repeater-item-<id> .swiper-slide-bg``."""
+    prefix = re.escape(f".elementor-repeater-item-{repeater_suffix}") + r"\s+\.swiper-slide-bg\s*\{"
+    m = re.search(prefix + r"[^}]*background-image\s*:\s*url\(\s*([^)]+)\s*\)", style_blob, re.I)
+    if not m:
+        return ""
+    return (m.group(1) or "").strip().strip("' \"")
+
+
+def _swiper_hero_background_urls(root: BeautifulSoup | Tag, page_url: str, style_blob: str) -> list[str]:
+    """Ordered slideshow slide backgrounds (Elementor injects URLs in ``<style>``, not always inline)."""
+    out: list[str] = []
+    slides = root.select(".elementor-main-swiper .swiper-slide")
+    if not slides:
+        slides = root.select(".elementor-slides .swiper-slide")
+    for slide in slides:
+        url = ""
+        for c in slide.get("class") or []:
+            if c.startswith("elementor-repeater-item-"):
+                suf = c.removeprefix("elementor-repeater-item-")
+                url = _elementor_slide_bg_url_from_css(style_blob, suf)
+                break
+        if not url:
+            bg = slide.select_one(".swiper-slide-bg")
+            if bg:
+                url = _css_url_from_background_style(bg.get("style") or "")
+        if url:
+            out.append(normalize_image_url(page_url, url))
+    return out
+
+
+def _is_layout_image_junk(raw_src: str) -> bool:
+    """Decorative patterns, brand marks, leaflets — skip for the ``layout`` gallery slot."""
+    if not raw_src:
+        return True
+    sl = raw_src.casefold()
+    needles = (
+        "pattern-",
+        "asset-2.png",
+        "/asset-2.",
+        "leaflet",
+        "cover-leaflet",
+        "qc-project-img",
+    )
+    return any(n in sl for n in needles)
+
+
 def collect_page_product_images(
     soup: BeautifulSoup, root: BeautifulSoup | Tag, page_url: str, *, limit: int = 5
 ) -> list[str]:
-    """Hero / layout images first (outside image-box widgets), then variant grid tiles, after ``og:image``."""
+    """Hero from slideshow CSS, one layout ``img``, then ``a.e-gallery-item`` hrefs (full-size)."""
     urls: list[str] = []
     seen: set[str] = set()
 
-    def push(raw: str) -> None:
+    def push(raw: str) -> bool:
         u = normalize_image_url(page_url, raw)
         if not u or not _is_product_photo_url(u):
-            return
+            return False
         if u in seen:
-            return
+            return False
         seen.add(u)
         urls.append(u)
+        return True
 
-    og = soup.select_one('meta[property="og:image"]')
-    if og and og.get("content"):
-        push(og["content"])
+    style_blob = _elementor_style_blob(soup)
+    heroes = _swiper_hero_background_urls(root, page_url, style_blob)
+    if heroes:
+        push(heroes[0])
 
     for img in root.select("img"):
         if _inside_image_box(img):
             continue
-        push(_img_src(img))
-        if len(urls) >= limit:
-            return urls[:limit]
+        src = _img_src(img)
+        if _is_layout_image_junk(src):
+            continue
+        if push(src) and len(urls) >= 2:
+            break
 
-    for img in root.select(".elementor-widget-image-box img"):
-        push(_img_src(img))
+    for a in root.select("a.e-gallery-item[href]"):
         if len(urls) >= limit:
             break
+        push(a.get("href") or "")
+
+    if len(urls) < limit:
+        for img in root.select("img"):
+            if _inside_image_box(img):
+                continue
+            src = _img_src(img)
+            if _is_layout_image_junk(src):
+                continue
+            push(src)
+            if len(urls) >= limit:
+                break
 
     return urls[:limit]
 
