@@ -196,11 +196,12 @@ def extract_sizes_field(root: BeautifulSoup | Tag) -> str:
 
 
 def standardize_sizes_field(raw: str) -> str:
-    """Lowercase; ensure a space before ``cm`` / ``mm`` when glued to a digit (``10x40cm`` → ``10x40 cm``)."""
+    """Lowercase; space before ``cm``/``mm`` when glued; EU decimal commas → dots (``6,5`` → ``6.5``); commas between sizes stay."""
     s = normalize_space(raw).lower()
     if not s:
         return ""
     s = re.sub(r"(\d)(cm|mm)\b", r"\1 \2", s)
+    s = re.sub(r"(?<=\d),(?=\d)", ".", s)
     return normalize_space(s)
 
 

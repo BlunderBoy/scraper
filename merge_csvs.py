@@ -3,7 +3,8 @@
 Merge scraper CSVs from each brand subfolder into root-level files.
 
 For each of products.csv, variants.csv, technical_pdfs.csv, and product_pdfs.csv:
-  - collect paths like <subdir>/products.csv (one level under this script's directory)
+  - collect paths like <subdir>/products.csv (one level under ``--root``), or only under
+    folder names you pass as positional arguments
   - take the header from the first file; skip headers on the rest
   - concatenate rows, optionally tag with parent folder name
   - sort by primary key (``id``)
@@ -41,6 +42,35 @@ SORT_KEYS: dict[str, tuple[str, ...]] = {
     "technical_pdfs.csv": ("id",),
     "product_pdfs.csv": ("id",),
 }
+
+
+def resolve_brand_directories(root: Path, folder_args: list[str]) -> list[Path] | None:
+    """Explicit brand folders to merge, or ``None`` = every direct child of ``root`` that has CSVs."""
+    if not folder_args:
+        return None
+    root_r = root.resolve()
+    out: list[Path] = []
+    seen: set[Path] = set()
+    for raw in folder_args:
+        p = Path(raw).expanduser()
+        if not p.is_absolute():
+            p = (root_r / p).resolve()
+        else:
+            p = p.resolve()
+        if not p.is_dir():
+            print(f"[error] not a directory: {p}", file=sys.stderr)
+            raise SystemExit(2)
+        if p not in seen:
+            seen.add(p)
+            out.append(p)
+    return sorted(out, key=lambda x: str(x).casefold())
+
+
+def collect_target_paths(root: Path, target: str, brand_dirs: list[Path] | None) -> list[Path]:
+    """Sorted list of ``target`` CSV paths (e.g. ``products.csv``) to merge."""
+    if brand_dirs is None:
+        return sorted(p for p in root.glob(f"*/{target}") if p.is_file())
+    return sorted((d / target) for d in brand_dirs if (d / target).is_file())
 
 
 def read_csv_rows(path: Path) -> tuple[list[str], list[list[str]]]:
@@ -555,6 +585,15 @@ def ids_shared_across_sources(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "folders",
+        nargs="*",
+        metavar="FOLDER",
+        help=(
+            "Brand folder names or paths to merge only those sources "
+            "(relative to --root unless absolute). Default: all immediate subfolders of --root."
+        ),
+    )
+    parser.add_argument(
         "--root",
         type=Path,
         default=Path(__file__).resolve().parent,
@@ -587,7 +626,8 @@ def main() -> int:
         help="Do not enforce globally unique numeric ids or cascade ids to variants.",
     )
     args = parser.parse_args()
-    root: Path = args.root
+    root: Path = args.root.resolve()
+    brand_dirs = resolve_brand_directories(root, args.folders)
     add_source = not args.no_source
     strict_header = not args.no_strict_header
 
@@ -595,8 +635,7 @@ def main() -> int:
     merged: dict[str, tuple[list[str], list[list[str]]]] = {}
 
     for target in TARGETS:
-        paths = sorted(root.glob(f"*/{target}"))
-        paths = [p for p in paths if p.is_file()]
+        paths = collect_target_paths(root, target, brand_dirs)
         if not paths:
             print(f"[skip] no files matching */{target}", file=sys.stderr)
             continue
@@ -666,8 +705,7 @@ def main() -> int:
             writer.writerow(header)
             writer.writerows(rows)
 
-        paths = sorted(root.glob(f"*/{target}"))
-        paths = [p for p in paths if p.is_file()]
+        paths = collect_target_paths(root, target, brand_dirs)
 
         sort_col = SORT_KEYS[target][0]
         dups = duplicate_keys(rows, header, sort_col)
