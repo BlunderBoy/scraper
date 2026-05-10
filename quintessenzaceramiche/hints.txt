@@ -1,0 +1,7 @@
+All products are actually collections on the manufacturer's website, but we will map them as products, and our products will have variants for each color available in that collection.
+
+The product on each link has a title, which already is in the excel, and size, thickness and finishes, which you should take. There's also a description, which you should translate from italian to romanian. If it helps, the selector for the description is this: .elementor-element-789ca4d4 > div:nth-child(1) > p:nth-child(1)
+
+The variants on the manufacturer website have a photo (or more, but take only the first), title, size (which you should ignore) and SKU (a string of letters and numbers), which should map to our SKU.
+
+
