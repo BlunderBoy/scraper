@@ -4,8 +4,9 @@ Quintessenza Ceramiche — collection pages from ``links.csv`` (quintessenzacera
 Each CSV row is one ``collezioni`` URL (treated as one product). Variants are the
 Elementor image-box tiles: color title, manufacturer SKU in the
 description line (variant line size is ignored), and a ``gallery_photos`` list of up to
-five URLs (variant tile first when unique, then Elementor slideshow hero, one layout
-image beside the copy, then three from ``a.e-gallery-item`` lightbox gallery).
+eight URLs (variant tile first when unique, then Elementor slideshow hero, one layout
+image beside the copy, then more from ``a.e-gallery-item`` until the cap).
+Product ``sizes`` are lowercased with a space before ``cm``/``mm``.
 Thickness is normalized to ``Xmm, Ymm``. Marketing description drops pipe-separated
 collection teasers and stub intros that only introduce further paragraphs.
 Sizes come from the Elementor size heading (metric only; see ``extract_sizes_field``). Product thickness,
@@ -64,6 +65,8 @@ except ImportError:
 MANUFACTURER = "Quintessenza Ceramiche"
 SKU_PREFIX = "QC"
 LINKS_CSV = "links.csv"
+
+PAGE_GALLERY_PHOTO_LIMIT = 8
 
 START_PRODUCT_ID = 2100
 START_VARIANT_ID = 11000
@@ -544,7 +547,7 @@ def _is_layout_image_junk(raw_src: str) -> bool:
 
 
 def collect_page_product_images(
-    soup: BeautifulSoup, root: BeautifulSoup | Tag, page_url: str, *, limit: int = 5
+    soup: BeautifulSoup, root: BeautifulSoup | Tag, page_url: str, *, limit: int = PAGE_GALLERY_PHOTO_LIMIT
 ) -> list[str]:
     """Hero from slideshow CSS, one layout ``img``, then ``a.e-gallery-item`` hrefs (full-size)."""
     urls: list[str] = []
@@ -685,7 +688,7 @@ def scrape(*, limit_rows: int | None = None, translate: bool = True, output_dir:
         thickness, finishes, material = product_detail_specs(root)
 
         sizes = extract_sizes_field(root)
-        page_gallery = collect_page_product_images(soup, root, url, limit=5)
+        page_gallery = collect_page_product_images(soup, root, url, limit=PAGE_GALLERY_PHOTO_LIMIT)
 
         desc_it = extract_description_it(soup)
         desc_ro = translate_it_ro(desc_it, enabled=translate_ok)
@@ -760,7 +763,7 @@ def scrape(*, limit_rows: int | None = None, translate: bool = True, output_dir:
             sku = variant_sku(SKU_PREFIX, v_id, cod_for_variant)
             col = default_color(normalize_space(v["color"]).title())
             v_img = normalize_image_url(url, v["image"]) if v["image"] else ""
-            gurls = dedupe_urls(([v_img] if v_img else []) + page_gallery)[:5]
+            gurls = dedupe_urls(([v_img] if v_img else []) + page_gallery)[:PAGE_GALLERY_PHOTO_LIMIT]
 
             variants_db.append(
                 {
