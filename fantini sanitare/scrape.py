@@ -11,10 +11,11 @@ Description: the short subtitle in ``<h3 class="text-subdisplay ...">`` on the
 product page (e.g. "Single-control washbasin mixer, cylindrical handle"). The
 old paragraph/JSON-LD descriptions were marketing duplicates and got dropped.
 
-Thumbnails: the per-variant ``og:image`` URLs on the live site 404, so the
-gallery photo is sourced from the global ``/en-ww/find-products`` listing page
-instead. The listing groups products by *collection* (Nostromo, Flora,
-AF/21...) so all variants of a given collection get the same hero image.
+Thumbnails: each variant page embeds a ``<script type="application/ld+json">``
+block whose ``image`` array contains a per-variant Cloudinary URL (the product
+shown in that specific finish). We extract that for the gallery photo. A
+collection-level fallback from ``/find-products`` is used only when the
+JSON-LD extraction fails.
 
 SKU: always ``FAN_<variant_id>`` -- the spreadsheet ``COD REFERINTA`` values
 contained inconsistent prefixes/concatenations so we ignore them entirely.
@@ -155,6 +156,28 @@ def description_text(soup: BeautifulSoup) -> str:
     if h3 is None:
         return ""
     return normalize_space(h3.get_text(" ", strip=True))
+
+
+def jsonld_variant_image(soup: BeautifulSoup) -> str:
+    """Extract the per-variant product image from the JSON-LD structured data.
+
+    Each variant page has ``<script type="application/ld+json">`` with a
+    ``{"@type":"Product", "image":[...]}`` block whose image URL is unique to
+    the selected finish/colour.
+    """
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(script.string or "")
+        except (json.JSONDecodeError, TypeError):
+            continue
+        if not isinstance(data, dict) or data.get("@type") != "Product":
+            continue
+        images = data.get("image")
+        if isinstance(images, list) and images:
+            return images[0]
+        if isinstance(images, str) and images:
+            return images
+    return ""
 
 
 def fetch_find_products_thumbnails(session: requests.Session) -> dict[str, str]:
@@ -382,14 +405,20 @@ def scrape(*, limit_rows: int | None = None) -> None:
         pid = product_key_to_id[k]
         url = clean_cell(row.get("Link variante"))
 
-        # COD REFERINTA from the spreadsheet has bad data (sometimes two SKUs
-        # concatenated with ``+``, sometimes a ``FAN_`` prefix, etc.) so we
-        # generate a clean per-variant SKU instead.
         sku = f"{SKU_PREFIX}_{v_id}"
         color = default_color(variant_color(row))
 
-        thumbnail = product_id_to_thumbnail.get(pid, "")
-        gallery = [thumbnail] if thumbnail else []
+        variant_soup = get_soup(url)
+        variant_img = ""
+        if variant_soup is not None:
+            variant_img = jsonld_variant_image(variant_soup)
+
+        if not variant_img:
+            variant_img = product_id_to_thumbnail.get(pid, "")
+            if variant_img:
+                print(f"  WARN variant {v_id}: JSON-LD image missing, falling back to collection thumbnail")
+
+        gallery = [variant_img] if variant_img else []
 
         variants_db.append({
             "id": v_id,
