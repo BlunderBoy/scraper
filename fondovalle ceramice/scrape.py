@@ -1,6 +1,7 @@
 """
-Fondovalle ceramics — product pages from ``links.csv`` (fondovalle.it).
+Fondovalle ceramics — collection pages from ``links.csv`` (fondovalle.it).
 
+One product per ``Colectie``; each ``Nume produs`` row is a color variant.
 SKU: ``COD REFERINTA`` when set; otherwise ``FV_<variant_id>``.
 """
 
@@ -8,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -26,7 +28,6 @@ from fondovalle_scrape_lib import (
     decorate_fondovalle_technical_pdf_titles,
     extract_gallery_urls,
     extract_product_row_common,
-    fondovalle_variant_color,
     merge_technical_documents,
     parse_dimensions_panel,
 )
@@ -36,6 +37,7 @@ from scraper_brand_utils import (
     created_stamp_now,
     default_color,
     norm_key,
+    normalize_space,
     total_gallery_count,
     variant_sku,
     write_brand_outputs,
@@ -99,14 +101,44 @@ def load_links(path: Path) -> pd.DataFrame:
     return df
 
 
-def product_key(row: pd.Series) -> tuple[str, str, str, str, str]:
+def collection_key(row: pd.Series) -> tuple[str, str, str, str]:
     return (
         norm_key(clean_cell(row.get("Categorie"))),
         norm_key(clean_cell(row.get("Subcategorie"))),
         norm_key(clean_cell(row.get("SUB-SUBCATEGORIE"))),
         norm_key(clean_cell(row.get("Colectie"))),
-        norm_key(clean_cell(row.get("Nume produs"))),
     )
+
+
+def ceramice_variant_color(row: Any) -> str:
+    """Color name from ``Nume produs``; Royal Travertino appends Vein/Cross sub-variant."""
+    shade = clean_cell(row.get("Nume produs"))
+    sub = clean_cell(row.get("Nume variante/SUBTITLU"))
+    if sub:
+        base = normalize_space(shade.title()) if shade else ""
+        sub_t = normalize_space(sub.title())
+        return normalize_space(f"{base} {sub_t}".strip()) if base else sub_t
+    return normalize_space(shade.title()) if shade else ""
+
+
+def _split_comma_field(value: str) -> list[str]:
+    return [normalize_space(p) for p in re.split(r"\s*,\s*", value or "") if clean_cell(p)]
+
+
+def merge_comma_union(a: str, b: str) -> str:
+    seen: set[str] = set()
+    out: list[str] = []
+    for tok in _split_comma_field(a) + _split_comma_field(b):
+        k = tok.casefold()
+        if k not in seen:
+            seen.add(k)
+            out.append(tok)
+    return ", ".join(out)
+
+
+def merge_product_row_fields(base: dict[str, Any], extra: dict[str, Any]) -> None:
+    for field in ("finishes", "sizes", "thickness"):
+        base[field] = merge_comma_union(clean_cell(base.get(field)), clean_cell(extra.get(field)))
 
 
 def normalize_ceramice_category(raw: str) -> str:
@@ -138,14 +170,14 @@ def scrape(*, limit_rows: int | None = None) -> None:
     if limit_rows is not None:
         data_rows = data_rows[: max(0, limit_rows)]
 
-    key_order: list[tuple[str, str, str, str, str]] = []
-    key_to_rows: dict[tuple[str, str, str, str, str], list[pd.Series]] = {}
+    coll_order: list[tuple[str, str, str, str]] = []
+    coll_to_rows: dict[tuple[str, str, str, str], list[pd.Series]] = {}
     for row in data_rows:
-        k = product_key(row)
-        if k not in key_to_rows:
-            key_order.append(k)
-            key_to_rows[k] = []
-        key_to_rows[k].append(row)
+        ck = collection_key(row)
+        if ck not in coll_to_rows:
+            coll_order.append(ck)
+            coll_to_rows[ck] = []
+        coll_to_rows[ck].append(row)
 
     products_db: list[dict[str, Any]] = []
     variants_db: list[dict[str, Any]] = []
@@ -171,10 +203,10 @@ def scrape(*, limit_rows: int | None = None) -> None:
             time.sleep(0.07)
         return soup
 
-    product_key_to_id: dict[tuple[str, str, str, str, str], int] = {}
+    collection_to_product_id: dict[tuple[str, str, str, str], int] = {}
 
-    for k in key_order:
-        group = key_to_rows[k]
+    for ck in coll_order:
+        group = coll_to_rows[ck]
         finishes_labels = sorted(
             {clean_cell(r.get("Variante culori")) for r in group if clean_cell(r.get("Variante culori"))},
             key=lambda s: s.casefold(),
@@ -183,7 +215,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
         first_url = normalize_url(clean_cell(first.get("Link variante")))
         soup = get_soup(first_url)
         if not soup:
-            print(f"\n=== SKIP product {k!r} ===")
+            print(f"\n=== SKIP collection {ck!r} ===")
             continue
 
         coll_url = collection_parent_url(first_url)
@@ -197,8 +229,6 @@ def scrape(*, limit_rows: int | None = None) -> None:
         subcategorie = clean_cell(first.get("Subcategorie"))
         sub_sub = clean_cell(first.get("SUB-SUBCATEGORIE"))
         colectie = clean_cell(first.get("Colectie"))
-        np = clean_cell(first.get("Nume produs"))
-        csv_title = clean_cell(first.get("Nume produs original")) or np
         sizes_agg = aggregate_unique_column(group, "Dimensiuni")
 
         row_dict = extract_product_row_common(
@@ -207,24 +237,56 @@ def scrape(*, limit_rows: int | None = None) -> None:
             subcategorie,
             sub_sub,
             colectie,
-            np,
+            colectie,
             finishes_labels,
             manufacturer=MANUFACTURER,
-            title_csv=csv_title,
+            title_csv=colectie,
             sizes_csv=sizes_agg or None,
             description_csv=None,
             collection_soup=soup_c,
             fondovalle_ceramice=True,
         )
+        row_dict["title"] = colectie
+        row_dict["collection"] = colectie
+
+        for extra in group[1:]:
+            extra_url = normalize_url(clean_cell(extra.get("Link variante")))
+            extra_soup = get_soup(extra_url)
+            if not extra_soup:
+                continue
+            extra_coll_url = collection_parent_url(extra_url)
+            extra_soup_c = (
+                get_soup(extra_coll_url)
+                if extra_coll_url
+                and extra_coll_url.rstrip("/").casefold() != extra_url.rstrip("/").casefold()
+                else soup_c
+            )
+            extra_dict = extract_product_row_common(
+                extra_soup,
+                categorie,
+                subcategorie,
+                sub_sub,
+                colectie,
+                clean_cell(extra.get("Nume produs")) or colectie,
+                finishes_labels,
+                manufacturer=MANUFACTURER,
+                title_csv=colectie,
+                sizes_csv=sizes_agg or None,
+                description_csv=None,
+                collection_soup=extra_soup_c,
+                fondovalle_ceramice=True,
+            )
+            merge_product_row_fields(row_dict, extra_dict)
+
         row_dict["category"] = normalize_ceramice_category(categorie)
         row_dict["id"] = p_id
         products_db.append(row_dict)
-        product_key_to_id[k] = p_id
+        collection_to_product_id[ck] = p_id
 
         docs = merge_technical_documents(soup, soup_c)
         decorate_fondovalle_technical_pdf_titles(
             docs,
-            product_title=clean_cell(row_dict.get("title", "")),
+            product_title=colectie,
             collection=colectie,
         )
         for sort_i, doc in enumerate(docs):
@@ -252,14 +314,17 @@ def scrape(*, limit_rows: int | None = None) -> None:
             )
             pp_id_counter += 1
 
-        print(f"\n  product id={p_id} | {row_dict.get('title')!r} | PDFs: {len(docs)}")
+        print(
+            f"\n  product id={p_id} | {colectie!r} | "
+            f"{len(group)} variants | PDFs: {len(docs)}"
+        )
         p_id += 1
 
     for row in data_rows:
-        k = product_key(row)
-        if k not in product_key_to_id:
+        ck = collection_key(row)
+        if ck not in collection_to_product_id:
             continue
-        pid = product_key_to_id[k]
+        pid = collection_to_product_id[ck]
         soup = get_soup(clean_cell(row.get("Link variante")))
         req_u = normalize_url(clean_cell(row.get("Link variante")))
         if soup:
@@ -271,7 +336,7 @@ def scrape(*, limit_rows: int | None = None) -> None:
             gurls = []
 
         sku = variant_sku(SKU_PREFIX, v_id, clean_cell(row.get("COD REFERINTA")))
-        col = default_color(fondovalle_variant_color(row))
+        col = default_color(ceramice_variant_color(row))
 
         variants_db.append(
             {

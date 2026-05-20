@@ -9,14 +9,15 @@ Sources:
 - ``https://moooiceramicsurfaces.com/en/surface/...`` — Moooi by ABK: ``minimali``
   color grid, spec list, catalogue PDF.
 
-**Product**: one row in ``products.csv`` per spreadsheet line. The title is the
-raw ``Nume produs`` from the CSV (e.g. ``Concrete Ash``); collection copy, sizes,
-and finishes come from the scraped page for that row’s URL.
+**Product**: one row in ``products.csv`` per unique ``Colectie`` (e.g. ``Blend``).
+Title and ``collection`` are the collection name; description, sizes, and finishes
+come from the scraped collection page. When several CSV rows share a collection,
+``finishes``, ``sizes``, and ``thickness`` are unioned on the product.
 
-**Variants**: exactly **one** variant per product (the same shade); ``gallery_photos``
-matches that name to the site’s colour grid. Duplicate display titles (e.g. two
-``STRIPES`` lines) get `` (2)``, `` (3)``, … on the product title. ``COD REFERINTA``
-→ ``sku`` when present, else ``ABK_<variant_id>``.
+**Variants**: one per ``Nume produs`` row (the shade/color); ``color`` is that name
+(e.g. ``Concrete Ash``). ``gallery_photos`` uses ``gallery_for_color()`` against the
+collection page’s colour grid. Duplicate shade names get `` (2)``, `` (3)``, … on
+``color``. ``COD REFERINTA`` → ``sku`` when present, else ``ABK_<variant_id>``.
 """
 
 from __future__ import annotations
@@ -383,6 +384,23 @@ def _clean_sizes_csv(raw: str) -> str:
     return ", ".join(p for p in dict.fromkeys(parts) if p)
 
 
+def merge_comma_field(existing: str, new: str) -> str:
+    """Union comma-separated tokens (finishes, sizes, thickness)."""
+    if not new or not new.strip():
+        return existing
+    if not existing or not existing.strip():
+        return new
+    seen: set[str] = set()
+    parts: list[str] = []
+    for value in (existing, new):
+        for item in re.split(r"[,;]", value):
+            item = item.strip()
+            if item and item not in seen:
+                seen.add(item)
+                parts.append(item)
+    return ", ".join(parts)
+
+
 def gallery_for_color(name: str, color_galleries: dict[str, list[str]]) -> list[str]:
     nk = norm_key(name)
     if not nk:
@@ -451,7 +469,9 @@ def scrape(*, limit_rows: int | None = None) -> None:
         time.sleep(0.08)
         return soup, nu
 
-    title_occurrences: dict[str, int] = {}
+    collection_to_product_id: dict[str, int] = {}
+    collection_product_idx: dict[str, int] = {}
+    color_occurrences: dict[str, int] = {}
 
     for row in data_rows:
         u = normalize_page_url(clean_cell(row.get("Link variante")))
@@ -464,11 +484,9 @@ def scrape(*, limit_rows: int | None = None) -> None:
         site_h1 = clean_cell(parsed.get("title", ""))
         nume = clean_cell(row.get("Nume produs"))
         colectie = clean_cell(row.get("Colectie"))
-        base_title = nume
-        nk_base = norm_key(base_title)
-        title_occurrences[nk_base] = title_occurrences.get(nk_base, 0) + 1
-        n_dup = title_occurrences[nk_base]
-        title = base_title if n_dup == 1 else f"{base_title} ({n_dup})"
+        if not colectie:
+            print(f"\n=== SKIP (no Colectie) {nume!r} ===")
+            continue
 
         desc = clean_cell(parsed.get("description", ""))
 
@@ -489,71 +507,90 @@ def scrape(*, limit_rows: int | None = None) -> None:
         if "moooi" in brand.casefold():
             manufacturer = "MOOOI BY ABK"
 
-        products_db.append(
-            {
-                "id": p_id,
-                "title": title,
-                "description": desc,
-                "category": normalize_category(categorie),
-                "type": subcategorie,
-                "collection": colectie,
-                "is_new": False,
-                "subtype": brand,
-                "manufacturer": manufacturer,
-                "catalog_id": None,
-                "finishes": finishes,
-                "position": infer_position(categorie, subcategorie),
-                "sizes": sizes,
-                "thickness": thickness,
-                "material": material,
-                "shape": "",
-                "cut": "",
-                "diameter": "",
-                "length": "",
-                "width": "",
-                "height": "",
-            }
-        )
-
+        coll_key = norm_key(colectie)
         color_map: dict[str, list[str]] = parsed.get("color_galleries") or {}
-        for sort_i, doc in enumerate(parsed.get("pdfs") or []):
-            doc_u = doc["url"]
-            if doc_u not in pdf_url_to_id:
-                pdf_url_to_id[doc_u] = pdf_id_counter
-                technical_pdfs_db.append(
+
+        if coll_key not in collection_to_product_id:
+            collection_to_product_id[coll_key] = p_id
+            collection_product_idx[coll_key] = len(products_db)
+            products_db.append(
+                {
+                    "id": p_id,
+                    "title": colectie,
+                    "description": desc,
+                    "category": normalize_category(categorie),
+                    "type": subcategorie,
+                    "collection": colectie,
+                    "is_new": False,
+                    "subtype": brand,
+                    "manufacturer": manufacturer,
+                    "catalog_id": None,
+                    "finishes": finishes,
+                    "position": infer_position(categorie, subcategorie),
+                    "sizes": sizes,
+                    "thickness": thickness,
+                    "material": material,
+                    "shape": "",
+                    "cut": "",
+                    "diameter": "",
+                    "length": "",
+                    "width": "",
+                    "height": "",
+                }
+            )
+            for sort_i, doc in enumerate(parsed.get("pdfs") or []):
+                doc_u = doc["url"]
+                if doc_u not in pdf_url_to_id:
+                    pdf_url_to_id[doc_u] = pdf_id_counter
+                    technical_pdfs_db.append(
+                        {
+                            "id": pdf_id_counter,
+                            "title": enrich_technical_pdf_title(
+                                doc["title"],
+                                product_title=colectie,
+                                collection=colectie,
+                            ),
+                            "r2_key": "",
+                            "url": doc_u,
+                            "created_at": stamp,
+                        }
+                    )
+                    pdf_id_counter += 1
+                product_pdfs_db.append(
                     {
-                        "id": pdf_id_counter,
-                        "title": enrich_technical_pdf_title(
-                            doc["title"],
-                            product_title=site_h1 or colectie,
-                            collection=colectie,
-                        ),
-                        "r2_key": "",
-                        "url": doc_u,
+                        "id": pp_id_counter,
+                        "product_id": p_id,
+                        "pdf_id": pdf_url_to_id[doc_u],
+                        "sort_order": sort_i,
                         "created_at": stamp,
                     }
                 )
-                pdf_id_counter += 1
-            product_pdfs_db.append(
-                {
-                    "id": pp_id_counter,
-                    "product_id": p_id,
-                    "pdf_id": pdf_url_to_id[doc_u],
-                    "sort_order": sort_i,
-                    "created_at": stamp,
-                }
-            )
-            pp_id_counter += 1
+                pp_id_counter += 1
+            p_id += 1
+        else:
+            idx = collection_product_idx[coll_key]
+            prod = products_db[idx]
+            prod["finishes"] = merge_comma_field(prod["finishes"], finishes)
+            prod["sizes"] = merge_comma_field(prod["sizes"], sizes)
+            prod["thickness"] = merge_comma_field(prod["thickness"], thickness)
+            if not prod.get("material") and material:
+                prod["material"] = material
 
-        name = nume
+        product_id = collection_to_product_id[coll_key]
+
+        dup_key = f"{coll_key}|{norm_key(nume)}"
+        color_occurrences[dup_key] = color_occurrences.get(dup_key, 0) + 1
+        n_dup = color_occurrences[dup_key]
+        color_name = nume if n_dup == 1 else f"{nume} ({n_dup})"
+
         sku = variant_sku(SKU_PREFIX, v_id, clean_cell(row.get("COD REFERINTA")))
-        gurls = gallery_for_color(name, color_map)
-        col_label = default_color(name.title() if name else "")
+        gurls = gallery_for_color(nume, color_map)
+        col_label = default_color(color_name)
 
         variants_db.append(
             {
                 "id": v_id,
-                "product_id": p_id,
+                "product_id": product_id,
                 "sku": sku,
                 "color": col_label,
                 "url": final_url,
@@ -563,10 +600,9 @@ def scrape(*, limit_rows: int | None = None) -> None:
         )
 
         print(
-            f"\n  product id={p_id} variant id={v_id} | {title!r} | "
-            f"PDFs={len(parsed.get('pdfs') or [])} | imgs={len(gurls)}"
+            f"\n  product id={product_id} variant id={v_id} | {colectie!r} / {col_label!r} | "
+            f"imgs={len(gurls)}"
         )
-        p_id += 1
         v_id += 1
         time.sleep(0.05)
 

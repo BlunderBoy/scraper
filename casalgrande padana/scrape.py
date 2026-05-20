@@ -8,12 +8,12 @@ single-page-app. Product data lives in the ``__NEXT_DATA__`` script as
 and ``attributi`` containing ``colori`` (per-shade swatches), ``decori``,
 ``pezziSpeciali``, ``formatiSpecifici``, ``superfici``, ``spessoreSpecifico``.
 
-CSV row model: each ``Nume produs`` is a separate product (one variant each).
-Many products share one URL (the collection page), so ``Link variante`` is
-forward-filled. Every distinct shade / decoro / pezzo speciale named in the
-CSV is matched against the collection's ``colori`` / ``decori`` /
-``pezziSpeciali`` lists to pull the swatch image; the page's ``mainImage`` and
-``detailImages`` are appended for context.
+CSV row model: each unique ``Colectie`` is one product; each ``Nume produs`` row
+is a color variant under that collection. Many rows share one URL (the
+collection page), so ``Link variante`` is forward-filled. Every distinct shade /
+decoro / pezzo speciale named in the CSV is matched against the collection's
+``colori`` / ``decori`` / ``pezziSpeciali`` lists to pull the swatch image;
+the page's ``mainImage`` and ``detailImages`` are appended for context.
 
 SKU: ``COD REFERINTA`` when set, else ``CP_<variant_id>``.
 """
@@ -46,7 +46,6 @@ from scraper_brand_utils import (
     clean_cell,
     created_stamp_now,
     dedupe_urls,
-    default_color,
     enrich_technical_pdf_title,
     norm_key,
     normalize_category,
@@ -228,6 +227,17 @@ def variant_gallery_urls(match: dict[str, Any] | None, parsed: dict[str, Any]) -
     return dedupe_urls([u for u in out if u])
 
 
+def merge_comma_fields(existing: str, new: str) -> str:
+    """Union comma-separated attribute strings, preserving order."""
+    parts: list[str] = []
+    for chunk in (existing, new):
+        for piece in chunk.split(","):
+            p = piece.strip()
+            if p:
+                parts.append(p)
+    return ", ".join(dict.fromkeys(parts))
+
+
 def load_links(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path, encoding="utf-8-sig")
     for col in ("Categorie", "Subcategorie", "SUB-SUBCATEGORIE", "Colectie", "Link variante"):
@@ -254,16 +264,18 @@ def scrape(*, limit_rows: int | None = None) -> None:
     session = requests.Session()
     session.headers.update(HEADERS)
 
-    cache: dict[str, dict[str, Any]] = {}
+    url_cache: dict[str, dict[str, Any]] = {}
+    # collection name -> (product_id, parsed page data, index in products_db)
+    collection_registry: dict[str, tuple[int, dict[str, Any], int]] = {}
 
     def get_parsed(url: str) -> dict[str, Any] | None:
-        if url in cache:
-            return cache[url]
+        if url in url_cache:
+            return url_cache[url]
         soup = fetch_soup(url, session)
         if not soup:
             return None
         parsed = parse_collection(soup)
-        cache[url] = parsed
+        url_cache[url] = parsed
         time.sleep(0.08)
         return parsed
 
@@ -287,86 +299,96 @@ def scrape(*, limit_rows: int | None = None) -> None:
         sub_sub = clean_cell(row.get("SUB-SUBCATEGORIE"))
         colectie = clean_cell(row.get("Colectie"))
 
-        parsed = get_parsed(url)
-        if parsed is None:
-            print(f"  SKIP product (fetch failed) {np_!r} from {url}")
+        if not colectie:
+            print(f"  SKIP variant (no collection) {np_!r}")
             continue
+
+        if colectie in collection_registry:
+            product_id, parsed, product_idx = collection_registry[colectie]
+        else:
+            parsed = get_parsed(url)
+            if parsed is None:
+                print(f"  SKIP collection (fetch failed) {colectie!r} from {url}")
+                continue
+
+            product = {
+                "id": p_id,
+                "title": colectie,
+                "description": parsed.get("description", ""),
+                "category": normalize_category(categorie),
+                "type": subcategorie,
+                "collection": colectie,
+                "is_new": False,
+                "subtype": sub_sub,
+                "manufacturer": MANUFACTURER,
+                "catalog_id": None,
+                "finishes": parsed.get("finishes", ""),
+                "position": "",
+                "sizes": parsed.get("sizes", ""),
+                "thickness": parsed.get("thickness", ""),
+                "material": "Porcelain stoneware",
+                "shape": "",
+                "cut": "",
+                "diameter": "",
+                "length": "",
+                "width": "",
+                "height": "",
+            }
+            products_db.append(product)
+            product_idx = len(products_db) - 1
+            product_id = p_id
+            collection_registry[colectie] = (product_id, parsed, product_idx)
+
+            for sort_i, doc in enumerate(parsed.get("documenti") or []):
+                doc_url = clean_cell(doc.get("url"))
+                if not doc_url:
+                    continue
+                if doc_url not in pdf_url_to_id:
+                    title_raw = clean_cell(doc.get("nome")) or clean_cell(doc.get("descrizione")) or doc_url.rsplit("/", 1)[-1]
+                    pdf_url_to_id[doc_url] = pdf_id_counter
+                    technical_pdfs_db.append({
+                        "id": pdf_id_counter,
+                        "title": enrich_technical_pdf_title(title_raw, product_title=colectie, collection=colectie),
+                        "r2_key": "",
+                        "url": doc_url,
+                        "created_at": stamp,
+                    })
+                    pdf_id_counter += 1
+                product_pdfs_db.append({
+                    "id": pp_id_counter,
+                    "product_id": product_id,
+                    "pdf_id": pdf_url_to_id[doc_url],
+                    "sort_order": sort_i,
+                    "created_at": stamp,
+                })
+                pp_id_counter += 1
+
+            print(
+                f"  product id={product_id} | {colectie!r} | "
+                f"docs={len(parsed.get('documenti') or [])}"
+            )
+            p_id += 1
+
+        product = products_db[collection_registry[colectie][2]]
+        product["finishes"] = merge_comma_fields(product["finishes"], parsed.get("finishes", ""))
+        product["sizes"] = merge_comma_fields(product["sizes"], parsed.get("sizes", ""))
+        product["thickness"] = merge_comma_fields(product["thickness"], parsed.get("thickness", ""))
 
         match, _kind = find_match(np_, parsed)
         gallery = variant_gallery_urls(match, parsed)
-        per_color_desc = ""
-        if match and match.get("descrizioneDettagliata"):
-            per_color_desc = html_to_text(match["descrizioneDettagliata"])
-
-        full_desc_parts: list[str] = []
-        if per_color_desc:
-            full_desc_parts.append(per_color_desc)
-        if parsed.get("description"):
-            full_desc_parts.append(parsed["description"])
-        description = "\n\n".join(full_desc_parts)
-
-        product = {
-            "id": p_id,
-            "title": np_,
-            "description": description,
-            "category": normalize_category(categorie),
-            "type": subcategorie,
-            "collection": colectie,
-            "is_new": False,
-            "subtype": sub_sub,
-            "manufacturer": MANUFACTURER,
-            "catalog_id": None,
-            "finishes": parsed.get("finishes", ""),
-            "position": "",
-            "sizes": parsed.get("sizes", ""),
-            "thickness": parsed.get("thickness", ""),
-            "material": "Porcelain stoneware",
-            "shape": "",
-            "cut": "",
-            "diameter": "",
-            "length": "",
-            "width": "",
-            "height": "",
-        }
-        products_db.append(product)
-
-        for sort_i, doc in enumerate(parsed.get("documenti") or []):
-            doc_url = clean_cell(doc.get("url"))
-            if not doc_url:
-                continue
-            if doc_url not in pdf_url_to_id:
-                title_raw = clean_cell(doc.get("nome")) or clean_cell(doc.get("descrizione")) or doc_url.rsplit("/", 1)[-1]
-                pdf_url_to_id[doc_url] = pdf_id_counter
-                technical_pdfs_db.append({
-                    "id": pdf_id_counter,
-                    "title": enrich_technical_pdf_title(title_raw, product_title=np_, collection=colectie),
-                    "r2_key": "",
-                    "url": doc_url,
-                    "created_at": stamp,
-                })
-                pdf_id_counter += 1
-            product_pdfs_db.append({
-                "id": pp_id_counter,
-                "product_id": p_id,
-                "pdf_id": pdf_url_to_id[doc_url],
-                "sort_order": sort_i,
-                "created_at": stamp,
-            })
-            pp_id_counter += 1
 
         sku = variant_sku(SKU_PREFIX, v_id, clean_cell(row.get("COD REFERINTA")))
         variants_db.append({
             "id": v_id,
-            "product_id": p_id,
+            "product_id": product_id,
             "sku": sku,
-            "color": "Standard",
+            "color": np_,
             "url": url,
             "gallery_photos": json.dumps(gallery, ensure_ascii=False),
             "technical_photos": json.dumps([], ensure_ascii=False),
         })
 
-        print(f"  product id={p_id} variant id={v_id} | {np_!r} | imgs={len(gallery)} | docs={len(parsed.get('documenti') or [])}")
-        p_id += 1
+        print(f"  variant id={v_id} product id={product_id} | {np_!r} | imgs={len(gallery)}")
         v_id += 1
 
     write_brand_outputs(

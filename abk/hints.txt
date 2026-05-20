@@ -1,0 +1,11 @@
+Each collection on abk.it (or moooiceramicsurfaces.com for Moooi) maps to one product on our website.
+Each color/shade listed in links.csv under that collection becomes a variant on that product.
+
+Moooi products (moooiceramicsurfaces.com) follow the same pattern but use manufacturer="MOOOI BY ABK".
+
+links.csv has one URL per collection (Link variante on the first row of each block); all colors in that block are scraped from that page.
+Product-level fields (finishes, sizes, thickness) are merged/unioned across all colors in the same collection.
+
+ABK collections: Blend, Crossroad Chalk, Sensi Fantasy, Sensi Nuance, Sensi 900, Sensi Gems, Sensi Up, Alterego, Sensi Roma, Cliff, Poetry Stone, Poetry Stone Reloaded, Poetry Colors
+
+Moooi collections: Sandy, Egg Scape, Special Edition

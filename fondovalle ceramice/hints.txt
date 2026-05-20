@@ -1,0 +1,17 @@
+Each collection on fondovalle.it maps to one product on our website.
+Product title = collection name (e.g. Homescape, Pigmento, Portland, Royal Travertino, Infinito 2.0).
+
+Each color within a collection is a variant of that product.
+Variant color = the color name from the manufacturer (Nume produs), e.g. Sugar, Clay, Coal for Homescape.
+Variant url = the individual color page URL on fondovalle.it (Link variante).
+
+Special case — Royal Travertino has sub-variants (Vein, Cross) per color:
+variant color = "{color} {sub_variant}" (e.g. Bianco Vein, Bianco Cross, Ebur Vein).
+
+Product fields (description, finishes, sizes, thickness, material) come from the collection page
+and from color pages; when they differ per color, finishes/sizes/thickness are merged (union of unique values).
+Description is taken from the first color row in the collection (shared collection copy).
+
+product_pdfs reference collection-level technical data sheets (one PDF per collection, shared by all variants).
+
+The scraper uses fondovalle_scrape_lib.py as a shared library with fondovalle mobilier.

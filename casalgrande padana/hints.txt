@@ -1,65 +1,23 @@
-64 products
-Elements Pebbles Beige
-Elements Pebbles Black
-Elements Pebbles Taupe
-Elements Pebbles Tobacco
-Terrae Beige
-Terrae Caramel
-Terrae Mattone
-Terrae Tortora
-Circle
-Metro Mud
-Metro Greige
-Metro Grey
-Metro Silver
-Metropolis Mosaico Mud 5x5
-Cemento Cassero Antracite
-Cemento Cassero Beige
-Cemento Cassero Bianco
-Cemento Rasato Grigio
-Grigio Antico
-Lunense
-Nero Antico
-Pavonazzetto
-Mosaico Listelli Marmora
-Calacatta Extra
-Extra Oro
-Deep Dark
-Fior di Pesco
-Grafite
-Jolie
-Orange Black
-Pulpis Tortora
-Starry Night
-Statuario Altissimo
-Titan White
-Verde Aver
-Texture Canvas Beige
-Texture Canvas White
-Texture Naturale Antracite
-Texture Canvas Antracite
-Texture Naturale Beige
-Texture Naturale White
-Lithos Beige
-Lithos Bianco
-Lithos Nero
-Aventino Vein
-Campidoglio Vein
-Campidoglio Cross
-Celio Vein
-Celio Anticata Cross
-Palatino Cross
-Palatino Vein
-Supreme Dark
-Supreme Sand
-Supreme Taupe
-Mosaico Listelli Supreme
-Era Bianca
-Era Grigia
-Era Pepe
-Era Bruna
-Era Crema
-Era Perla
-Mosaico Listelli A (Bianca, Grigia, Pepe)
-Mosaico Listelli B (Perla, Crema, Bruna)
-one variant for each
+Casalgrande Padana (casalgrandepadana.com) — one product per collection, one variant per color/shade.
+
+Each collection page on the site maps to a single product on our website. Colors, decori, and special pieces within that collection are variants (variant color = the CSV "Nume produs" shade name).
+
+The site is a Next.js SPA. Product data is embedded in the #__NEXT_DATA__ script tag as props.pageProps.prodotto (titolo, descrizione HTML, mainImage, detailImages, documenti, attributi with colori/decori/pezziSpeciali, formatiSpecifici, superfici, spessoreSpecifico).
+
+Collections and variant counts (from links.csv):
+
+Elements Pebbles (4): Beige, Black, Taupe, Tobacco
+Terrae (5): Beige, Caramel, Mattone, Tortora, Circle
+Metropolis (5): Metro Mud, Metro Greige, Metro Grey, Metro Silver, Metropolis Mosaico Mud 5x5
+Cemento (4): Cemento Cassero Antracite, Cemento Cassero Beige, Cemento Cassero Bianco, Cemento Rasato Grigio
+Marmora (4+1): Grigio Antico, Lunense, Nero Antico, Pavonazzetto, Mosaico Listelli Marmora
+Marmoker (12): Calacatta Extra, Extra Oro, Deep Dark, Fior di Pesco, Grafite, Jolie, Orange Black, Pulpis Tortora, Starry Night, Statuario Altissimo, Titan White, Verde Aver
+Texture / Elements Texture (6): Canvas Beige, Canvas White, Naturale Antracite, Canvas Antracite, Naturale Beige, Naturale White
+Lithos (3): Beige, Bianco, Nero
+Supreme (4+1): Dark, Sand, Taupe, Mosaico Listelli Supreme
+Era (8): Bianca, Grigia, Pepe, Bruna, Crema, Perla, Mosaico Listelli A, Mosaico Listelli B
+Pietra Tiburtina — Marmoker Aventino/Campidoglio/Celio/Palatino (7): Aventino Vein, Campidoglio Vein, Campidoglio Cross, Celio Vein, Celio Anticata Cross, Palatino Cross, Palatino Vein
+
+Product fields (description, sizes, finishes, thickness, material) come from the collection JSON, merged across all shades in the collection. Variant galleries use the matched colori/decori/pezziSpeciali swatch image plus collection main/detail images.
+
+PDFs are per-collection (catalogs, technical features, declarations of performance) — linked once per product, not per variant.
