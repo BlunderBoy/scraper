@@ -25,13 +25,13 @@ compatibility_date = "2025-04-01"
 # workers_dev = false
 
 # Replace with your Cloudflare account ID (dashboard URL or Overview page).
-account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+account_id = "870fe720d0ef5570621fad5bb7c808fc"
 
 # D1 — binding name "DB" is how Workers code would access it; upload_cloudflare.py uses REST + database_id only.
 [[d1_databases]]
 binding = "DB"
-database_name = "YOUR_D1_DATABASE_NAME"
-database_id = "YOUR_D1_DATABASE_UUID"
+database_name = "products-db"
+database_id = "fd578301-1703-4c8e-9e32-35e1bdac5940"
 
 # R2 — binding name "IMAGES"; upload_cloudflare.py uses bucket_name + S3 keys from `.env`.
 [[r2_buckets]]

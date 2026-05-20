@@ -38,11 +38,13 @@ Human-only runbook. Migrate live D1 data so **one manufacturer collection = one 
 
 ### Manufacturers in scope
 
-| Brand | `products.manufacturer` filter |
-|--------|--------------------------------|
-| Fondovalle ceramice | `manufacturer = 'Fondovalle'` |
+| Brand | `products` filter |
+|--------|-------------------|
+| Fondovalle ceramice | `manufacturer = 'Fondovalle' AND category = 'ceramice'` |
 | Casalgrande Padana | `manufacturer = 'Casalgrande Padana'` |
 | ABK + Moooi | `manufacturer IN ('ABK', 'MOOOI BY ABK')` |
+
+Fondovalle **mobilier** shares `manufacturer = 'Fondovalle'` but uses `category = 'mobilier'` — exclude it from session 1 (no separate migration in this runbook).
 
 Migrate **one manufacturer per session** so Time Travel rollback stays understandable.
 
@@ -111,6 +113,8 @@ npx wrangler d1 execute DB --remote --command "PRAGMA table_info(products);"
 If `PRAGMA table_info(products)` shows a **`source`** column (merged-upload schema), add  
 `AND source = 'fondovalle ceramice'` (or the right folder name) to every `products` / `variants` / `product_pdfs` filter in the SQL below, and include `source` in temp tables. If there is no `source` column, ignore this.
 
+On live D1, Fondovalle ceramice vs mobilier is split by **`category`** (`'ceramice'` / `'mobilier'`) — see session 1 filters in §1 and `01-fondovalle.sql`.
+
 ---
 
 ## 3. Safety net (before any migration)
@@ -168,27 +172,32 @@ Or open `backups\d1-local.db` in DB Browser and execute the `.sql` import.
 Save outputs in a text file for comparison.
 
 ```sql
--- Replace manufacturer filter per brand (examples below use Fondovalle)
+-- Replace filter per brand (Fondovalle ceramice examples below)
 
-SELECT 'products' AS t, COUNT(*) AS n FROM products WHERE manufacturer = 'Fondovalle';
+SELECT 'products' AS t, COUNT(*) AS n FROM products
+WHERE manufacturer = 'Fondovalle' AND category = 'ceramice';
 SELECT 'variants' AS t, COUNT(*) AS n
 FROM variants v
-WHERE v.product_id IN (SELECT id FROM products WHERE manufacturer = 'Fondovalle');
+WHERE v.product_id IN (
+  SELECT id FROM products WHERE manufacturer = 'Fondovalle' AND category = 'ceramice'
+);
 SELECT 'product_pdfs' AS t, COUNT(*) AS n
 FROM product_pdfs pp
-WHERE pp.product_id IN (SELECT id FROM products WHERE manufacturer = 'Fondovalle');
+WHERE pp.product_id IN (
+  SELECT id FROM products WHERE manufacturer = 'Fondovalle' AND category = 'ceramice'
+);
 ```
 
 Run on **local**:
 
 ```powershell
-sqlite3 backups\d1-local.db "SELECT COUNT(*) FROM products WHERE manufacturer = 'Fondovalle';"
+sqlite3 backups\d1-local.db "SELECT COUNT(*) FROM products WHERE manufacturer = 'Fondovalle' AND category = 'ceramice';"
 ```
 
 Run on **remote**:
 
 ```powershell
-npx wrangler d1 execute DB --remote --command "SELECT COUNT(*) AS n FROM products WHERE manufacturer = 'Fondovalle';"
+npx wrangler d1 execute DB --remote --command "SELECT COUNT(*) AS n FROM products WHERE manufacturer = 'Fondovalle' AND category = 'ceramice';"
 ```
 
 ---
@@ -204,7 +213,7 @@ SELECT collection, manufacturer, COUNT(*) AS n_products,
        GROUP_CONCAT(id) AS product_ids,
        GROUP_CONCAT(title) AS titles
 FROM products
-WHERE manufacturer = 'Fondovalle'   -- change per session
+WHERE manufacturer = 'Fondovalle' AND category = 'ceramice'   -- change per session
   AND TRIM(COALESCE(collection, '')) != ''
 GROUP BY collection, manufacturer
 HAVING COUNT(*) > 1
@@ -214,9 +223,9 @@ ORDER BY n_products DESC;
 ### 5.2 Rows that cannot auto-group
 
 ```sql
-SELECT id, title, collection, manufacturer
+SELECT id, title, collection, manufacturer, category
 FROM products
-WHERE manufacturer = 'Fondovalle'
+WHERE manufacturer = 'Fondovalle' AND category = 'ceramice'
   AND (collection IS NULL OR TRIM(collection) = '');
 ```
 
@@ -229,7 +238,7 @@ SELECT p.collection, p.id AS product_id, p.title AS product_title,
        v.id AS variant_id, v.color
 FROM products p
 JOIN variants v ON v.product_id = p.id
-WHERE p.manufacturer = 'Fondovalle'
+WHERE p.manufacturer = 'Fondovalle' AND p.category = 'ceramice'
 ORDER BY p.collection, p.id, v.id;
 ```
 
@@ -239,7 +248,7 @@ ORDER BY p.collection, p.id, v.id;
 SELECT p.collection, pp.pdf_id, COUNT(DISTINCT pp.product_id) AS n_products
 FROM product_pdfs pp
 JOIN products p ON p.id = pp.product_id
-WHERE p.manufacturer = 'Fondovalle'
+WHERE p.manufacturer = 'Fondovalle' AND p.category = 'ceramice'
 GROUP BY p.collection, pp.pdf_id
 HAVING n_products > 1;
 ```
@@ -267,80 +276,106 @@ Create one file per brand under `backups/migrations/`, e.g.:
 - `backups/migrations/02-abk-moooi.sql`
 - `backups/migrations/03-casalgrande.sql`
 
-**Edit the manufacturer filter** in the `pcm` CTE and optional `keeper_override` inserts.
+**Edit the brand filter** in the `_mig_*_pcm` query (manufacturer, and `category` for Fondovalle ceramice) and optional `_mig_*_keeper_override` inserts.
 
-### 6.1 Fondovalle template
+### 6.0 Local SQLite vs remote D1
+
+| Feature | Local `sqlite3` / DB Browser | Remote `wrangler d1 execute --remote --file=...` |
+|---------|------------------------------|--------------------------------------------------|
+| `CREATE TEMP TABLE` | Works (`temp` schema) | **Fails** — D1 is sandboxed and cannot use the temp schema → `SQLITE_AUTH` |
+| `BEGIN` / `COMMIT` in the file | Optional (wrap in §6.5) | **Fails** — use wrangler batch only |
+| Staging tables | Use `_mig_*` in `main` for scripts shared with remote | Same |
+
+Migration files under `backups/migrations/` use **`CREATE TABLE _mig_*`** and **`DROP TABLE`** at the end so one file works both places.
+
+### 6.1 Fondovalle ceramice template
 
 ```sql
-PRAGMA foreign_keys = ON;
-
-BEGIN IMMEDIATE;
+DROP TABLE IF EXISTS _mig_fv_pcm;
+DROP TABLE IF EXISTS _mig_fv_keeper_override;
 
 -- Optional: override MIN(id) keepers (uncomment INSERTs; table is empty by default)
-CREATE TEMP TABLE keeper_override (
+CREATE TABLE _mig_fv_keeper_override (
   collection TEXT NOT NULL PRIMARY KEY,
   keeper_product_id INTEGER NOT NULL
 );
--- INSERT INTO keeper_override (collection, keeper_product_id) VALUES
+-- INSERT INTO _mig_fv_keeper_override (collection, keeper_product_id) VALUES
 --   ('Homescape', 800),
 --   ('Royal Travertino', 858);
 
-CREATE TEMP TABLE pcm AS
+CREATE TABLE _mig_fv_pcm AS
 SELECT
   p.id AS old_product_id,
   p.title AS old_title,
   TRIM(p.collection) AS collection,
   p.manufacturer,
   COALESCE(
-    (SELECT ko.keeper_product_id FROM keeper_override ko
+    (SELECT ko.keeper_product_id FROM _mig_fv_keeper_override ko
      WHERE ko.collection = TRIM(p.collection)),
     (SELECT MIN(p2.id) FROM products p2
      WHERE p2.manufacturer = p.manufacturer
+       AND p2.category = 'ceramice'
        AND TRIM(p2.collection) = TRIM(p.collection))
   ) AS keeper_product_id
 FROM products p
 WHERE p.manufacturer = 'Fondovalle'
+  AND p.category = 'ceramice'
   AND TRIM(COALESCE(p.collection, '')) != '';
 
 -- 1) Reassign variants + fix color
 UPDATE variants
 SET
-  product_id = (SELECT keeper_product_id FROM pcm WHERE pcm.old_product_id = variants.product_id),
+  product_id = (SELECT keeper_product_id FROM _mig_fv_pcm WHERE _mig_fv_pcm.old_product_id = variants.product_id),
   color = (
     SELECT CASE
-      WHEN TRIM(COALESCE(variants.color, '')) IN ('', 'Standard') THEN pcm.old_title
-      WHEN variants.color = pcm.old_title THEN variants.color
-      ELSE pcm.old_title || ' ' || variants.color
+      WHEN TRIM(COALESCE(variants.color, '')) IN ('', 'Standard') THEN _mig_fv_pcm.old_title
+      WHEN variants.color = _mig_fv_pcm.old_title THEN variants.color
+      ELSE _mig_fv_pcm.old_title || ' ' || variants.color
     END
-    FROM pcm
-    WHERE pcm.old_product_id = variants.product_id
+    FROM _mig_fv_pcm
+    WHERE _mig_fv_pcm.old_product_id = variants.product_id
   )
-WHERE product_id IN (SELECT old_product_id FROM pcm);
+WHERE product_id IN (SELECT old_product_id FROM _mig_fv_pcm);
 
--- 2) Remap product_pdfs to keeper
+-- 2) Drop duplicate PDF links before remap (UNIQUE on product_id + pdf_id)
+DELETE FROM product_pdfs
+WHERE rowid IN (
+  SELECT pp.rowid FROM product_pdfs pp
+  INNER JOIN _mig_fv_pcm ON _mig_fv_pcm.old_product_id = pp.product_id
+  WHERE pp.rowid NOT IN (
+    SELECT MIN(pp2.rowid) FROM product_pdfs pp2
+    INNER JOIN _mig_fv_pcm ON _mig_fv_pcm.old_product_id = pp2.product_id
+    GROUP BY _mig_fv_pcm.keeper_product_id, pp2.pdf_id
+  )
+);
+
+-- 3) Remap product_pdfs to keeper
 UPDATE product_pdfs
-SET product_id = (SELECT keeper_product_id FROM pcm WHERE pcm.old_product_id = product_pdfs.product_id)
-WHERE product_id IN (SELECT old_product_id FROM pcm);
+SET product_id = (SELECT keeper_product_id FROM _mig_fv_pcm WHERE _mig_fv_pcm.old_product_id = product_pdfs.product_id)
+WHERE product_id IN (SELECT old_product_id FROM _mig_fv_pcm);
 
--- 3) Dedupe product_pdfs (same collection now shares one product_id per pdf)
+-- 4) Dedupe product_pdfs (safety net)
 DELETE FROM product_pdfs
 WHERE rowid NOT IN (
   SELECT MIN(rowid) FROM product_pdfs GROUP BY product_id, pdf_id
 );
 
--- 4) Collection-level product title (does not merge finishes/sizes — see §6.4)
+-- 5) Collection-level product title (does not merge finishes/sizes — see §6.4)
 UPDATE products
 SET title = collection
-WHERE id IN (SELECT DISTINCT keeper_product_id FROM pcm);
+WHERE id IN (SELECT DISTINCT keeper_product_id FROM _mig_fv_pcm);
 
--- 5) Remove redundant per-color product rows
+-- 6) Remove redundant per-color product rows
 DELETE FROM products
 WHERE id IN (
-  SELECT old_product_id FROM pcm WHERE old_product_id != keeper_product_id
+  SELECT old_product_id FROM _mig_fv_pcm WHERE old_product_id != keeper_product_id
 );
 
-COMMIT;
+DROP TABLE _mig_fv_pcm;
+DROP TABLE _mig_fv_keeper_override;
 ```
+
+(`02-abk-moooi.sql` / `03-casalgrande.sql` use `_mig_abk_*` / `_mig_cg_*` names.)
 
 ### 6.2 ABK + Moooi
 
@@ -366,11 +401,19 @@ To union comma-separated fields locally (SQLite), run a separate one-off per fie
 
 ### 6.5 Run on local copy
 
+Same migration file as remote (no `TEMP` tables). For one atomic transaction locally:
+
 ```powershell
-sqlite3 backups\d1-local.db < backups\migrations\01-fondovalle.sql
+sqlite3 backups\d1-local.db
 ```
 
-If SQLite reports an error, `ROLLBACK` is automatic (transaction aborted). Fix SQL and re-import from `d1-before-...sql` if needed.
+```sql
+BEGIN IMMEDIATE;
+.read backups/migrations/01-fondovalle.sql
+COMMIT;
+```
+
+If SQLite reports an error inside `BEGIN`, run `ROLLBACK;` then re-import from `d1-before-...sql` if needed.
 
 ---
 
@@ -380,7 +423,7 @@ If SQLite reports an error, `ROLLBACK` is automatic (transaction aborted). Fix S
 -- One product per collection?
 SELECT collection, manufacturer, COUNT(*) AS n
 FROM products
-WHERE manufacturer = 'Fondovalle'
+WHERE manufacturer = 'Fondovalle' AND category = 'ceramice'
 GROUP BY collection, manufacturer
 HAVING COUNT(*) > 1;
 
@@ -409,7 +452,7 @@ SELECT sku, COUNT(*) AS n FROM variants GROUP BY sku HAVING COUNT(*) > 1;
 SELECT p.id, p.title, p.collection, COUNT(v.id) AS n_variants
 FROM products p
 LEFT JOIN variants v ON v.product_id = p.id
-WHERE p.manufacturer = 'Fondovalle'
+WHERE p.manufacturer = 'Fondovalle' AND p.category = 'ceramice'
 GROUP BY p.id
 ORDER BY p.collection;
 ```
@@ -418,7 +461,7 @@ ORDER BY p.collection;
 
 | Manufacturer | ~products after | ~variants (unchanged count) |
 |--------------|-----------------|-----------------------------|
-| Fondovalle | ~13 | ~80 |
+| Fondovalle ceramice | ~13 | ~80 |
 | ABK + Moooi | ~16–22 | ~65 |
 | Casalgrande | ~11–15 | ~63 |
 
@@ -444,7 +487,7 @@ Spot-check:
 
 ### 8.2 Execute migration file on remote
 
-D1 runs statements in the file against the **remote** database. Wrapping in `BEGIN` / `COMMIT` submits one logical batch (if any statement fails, the transaction should roll back — verify behavior once on a test if unsure).
+Use the `backups/migrations/*.sql` files as written: **`_mig_*` tables only**, no `CREATE TEMP TABLE`, no `BEGIN`/`COMMIT` (see §6.0). Wrangler runs the file as one batch against remote D1.
 
 ```powershell
 npx wrangler d1 execute DB --remote --file=backups\migrations\01-fondovalle.sql
@@ -452,14 +495,16 @@ npx wrangler d1 execute DB --remote --file=backups\migrations\01-fondovalle.sql
 
 Repeat for `02-abk-moooi.sql`, `03-casalgrande.sql`.
 
-**Alternative (single statements):** split the file and run step-by-step only if the combined file fails parsing; prefer one transactional file when possible.
+If execution fails partway through, use Time Travel restore (`§3.1`). **`SQLITE_AUTH`** almost always means a disallowed statement (temp schema, transaction SQL, or unsupported `PRAGMA`) — not a Wrangler login problem.
+
+**Alternative:** split the file and run step-by-step only if the combined file fails parsing.
 
 ### 8.3 Post-flight on remote
 
 Re-run the same validation queries from §7 via:
 
 ```powershell
-npx wrangler d1 execute DB --remote --command "SELECT collection, COUNT(*) AS n FROM products WHERE manufacturer = 'Fondovalle' GROUP BY collection HAVING COUNT(*) > 1;"
+npx wrangler d1 execute DB --remote --command "SELECT collection, COUNT(*) AS n FROM products WHERE manufacturer = 'Fondovalle' AND category = 'ceramice' GROUP BY collection HAVING COUNT(*) > 1;"
 ```
 
 Compare counts to §4.2 baseline:
@@ -489,7 +534,7 @@ This restores the **whole** database, including other manufacturers and any edit
 
 | Session | Manufacturer | Migration file |
 |---------|--------------|----------------|
-| 1 | Fondovalle | `01-fondovalle.sql` |
+| 1 | Fondovalle ceramice | `01-fondovalle.sql` |
 | 2 | ABK + Moooi | `02-abk-moooi.sql` |
 | 3 | Casalgrande Padana | `03-casalgrande.sql` |
 
@@ -503,7 +548,7 @@ Between sessions: new Time Travel bookmark + spot-check site.
 |--------|------|
 | **technical_pdfs** | Not modified; only `product_pdfs.product_id` changes |
 | **New product IDs** | Keepers keep existing ids; deleted rows are duplicate per-color **products** only |
-| **Other manufacturers** | Untouched if filters are correct |
+| **Other manufacturers / Fondovalle mobilier** | Untouched if filters are correct (`category = 'mobilier'` for Fondovalle furniture) |
 | **CSV / scrape reload** | Separate; scrapers already emit collection=product format for future runs |
 | **Romanian translations** | Unchanged on `products` unless you edit text |
 | **R2 / images** | Variant `gallery_photos` JSON untouched |
@@ -564,4 +609,4 @@ npx wrangler d1 time-travel restore YOUR_D1_DATABASE_NAME --bookmark=...
 
 ---
 
-*Last updated for collection-as-product migration (Fondovalle, ABK/Moooi, Casalgrande Padana).*
+*Last updated for collection-as-product migration (Fondovalle ceramice, ABK/Moooi, Casalgrande Padana).*
