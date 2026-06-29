@@ -1,0 +1,23 @@
+You should create a product for each "nume produs", with variants with name from "nume variante" or "variante culori". 
+You should preserve the skus in links.csv (cod referinta), and the name of the product in the csv, not the website.
+For products with no variants, create a default variant with the name "Standard".
+
+From the website, I will give general guidance for all products, with the exception of products with variants, which I will explain below after the general guidance which fields should be different and how.
+For each item in general guidance I will give an example of CSS path to where the element is in the page. The CSS path for different products might differ, but adapt.
+
+General guidance:
+- Hero photo (first in photos list): html body.__className_11eabb main.pt-20.pb-10.md:pt-32.md:pb-20.lg:pt-44.lg:pb-32.xl:pb-44.xl:pt-44 div.px-5.md:px-10.lg:px-20.xl:px-32.relative div.container.mx-auto div.grid.lg:grid-cols-2.lg:gap-10.xl:gap-20 div div.relative.h-[300px].md:h-[500px].flex img.object-contain.object-center
+- Measurements: html body.__className_11eabb main.pt-20.pb-10.md:pt-32.md:pb-20.lg:pt-44.lg:pb-32.xl:pb-44.xl:pt-44 div.px-5.md:px-10.lg:px-20.xl:px-32.relative div.container.mx-auto div.grid.lg:grid-cols-2.lg:gap-10.xl:gap-20 div.mt-7.md:mt-10.lg:mt-5 div.mt-10 div.grid.grid-cols-2.my-2.justify-center p
+- Material: html body.__className_11eabb main.pt-20.pb-10.md:pt-32.md:pb-20.lg:pt-44.lg:pb-32.xl:pb-44.xl:pt-44 div.px-5.md:px-10.lg:px-20.xl:px-32.relative div.container.mx-auto div.grid.lg:grid-cols-2.lg:gap-10.xl:gap-20 div.mt-7.md:mt-10.lg:mt-5 div.mt-10 div.grid.grid-cols-2.my-2.justify-center p
+- Technical photo: html body.__className_11eabb main.pt-20.pb-10.md:pt-32.md:pb-20.lg:pt-44.lg:pb-32.xl:pb-44.xl:pt-44 div.px-5.md:px-10.lg:px-20.xl:px-32.relative div.container.mx-auto div.grid.lg:grid-cols-2.lg:gap-10.xl:gap-20 div.mt-7.md:mt-10.lg:mt-5 div.mt-10 div.mt-10 img.h-20.md:h-32.w-auto
+- Gallery photos (the rest in the photos list): html body.__className_11eabb main.pt-20.pb-10.md:pt-32.md:pb-20.lg:pt-44.lg:pb-32.xl:pb-44.xl:pt-44 div.px-5.md:px-10.lg:px-20.xl:px-32.relative div.container.mx-auto div.mt-16.md:mt-20.lg:mt-32.xl:mt-44 div.relative div.grid.grid-cols-3.gap-5 div.lg:col-span-1.block.select-none.col-span-3.relative.h-[250px].md:h-[400px].lg:h-[400px].xl:h-[500px].2xl:h-[600px].overflow-hidden.cursor-pointer img
+
+Guidance for Dining Oval Table Imen:
+The data is in the same place as the normal products, only each variant has its own url. The measurements are the same between variants, and you should leave the material Empty
+
+Guidance for Round Side Table Phil:
+- all variants will have the same photos
+- all variants will have the same url
+- for measurements, concatenate the listed sizes
+- material is the same for all
+
